@@ -118,7 +118,6 @@ for m in range(message_count):
 	if m > 0:# filling in the lengths
 		lengths.append(messages[m].message_pointer - messages[m-1].message_pointer)
 lengths.append(footer_position - messages[message_count-1].message_pointer)
-print(lengths[-1:])
 
 
 for m in range(message_count):
