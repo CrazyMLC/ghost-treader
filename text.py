@@ -6,37 +6,45 @@ from sys import argv
 from tables import *
 
 
-
-def decode_message(message_data):
-	"""Decode the message from an iterator"""
-
+def decode_message(m):
+	data.seek(messages[m].message_pointer)
 	message = ''
-
-	for char in message_data:
+	i = 0
+	
+	while i < lengths[m]>>1:
+		char, = unpack('<H', data.read(2))
 		if char in commands:
 			command = commands[char]
+			# if getting parameters would go out of bounds, don't do it.
+			if i+command.count('{0') >= lengths[m]>>1:
+				message += text_table.setdefault(char, r'[0x{0:04x}]'.format(char))
+				i+=1
+				continue
+			# okay, time to fetch parameters.
 			parameters = []
-			for i in range(command.count('{0')):
-				parameters.append(next(message_data))
+			for j in range(command.count('{0')):
+				i+=1
+				parameters.append(unpack('<H', data.read(2))[0])
+			# if we got any params, time to start inserting them. check tables for replacing numbers with strings.
 			for param in parameters:
 				p = param
 				if command.count('COLOR {'):
-					p = colors.setdefault(param, r'!!!!!\x{0:04x}'.format(param))
+					p = colors.setdefault(param, r'!!!\x{0:04x}'.format(param))
 				elif command.count('MINI_PORTRAIT {'):
-					p = mini_portraits.setdefault(param, r'!!!!!\x{0:04x}'.format(param))
+					p = mini_portraits.setdefault(param, r'!!!\x{0:04x}'.format(param))
 				elif command.count('PORTRAIT {'):
-					p = portraits.setdefault(param, r'!!!!!\x{0:04x}'.format(param))
+					p = portraits.setdefault(param, r'!!!\x{0:04x}'.format(param))
 				elif command.count('SFX {'):
-					p = sounds.setdefault(param, r'!!!!!\x{0:04x}'.format(param))
+					p = sounds.setdefault(param, r'!!!\x{0:04x}'.format(param))
 				command = command.format(p)
 			message += command
-			if command.count('[STOP]'):
-				break
 		else:
-			message += text_table.setdefault(char, r'!!!!!\x{0:04x}'.format(char))
+			message += text_table.setdefault(char, r'[0x{0:04x}]'.format(char))
+		i+=1
 
 	#print(message)
 	return message
+
 
 def get_label(data, pointer):
 	"""Get and return the label at the given pointer."""
@@ -52,55 +60,82 @@ def get_label(data, pointer):
 
 	return label.decode('ASCII')
 
-def message_iterator(data, pointer):
-	"""Yield the message at the given pointer, character by character.
-
-	Each character is two bytes long and little endian.
-	"""
-	data.seek(pointer)
-	while True:
-		char, = unpack('<H', data.read(2))
-
-		#if char == 0xfffe:
-		#	raise StopIteration
-	   # else:
-		yield char
-
 
 with open(argv[1], 'rb') as text_file:
 	data = text_file.read()
 data = BytesIO(data)
 
 
+"""
+header format: (length 34)
+1LMG (identifier)
+4 byes (???)
+4 bytes (footer pointer)
+4 bytes (pointer table pointer, relative to above)
+4 bytes (end of file pointer, relative to above)
+
+data format:
+#
+
+footer format:
+2 bytes (* )
+# string bytes
+# data pointer table
+	4 bytes table length
+	# table
+2 bytes (* )
+# label bytes
+"""
+
+
 assert data.read(4) == b'1LMG'
 
-# Seek to and read message pointers
+# find all the important file locations
 data.seek(8)
+footer_offset, = unpack('<H', data.read(2))
+data.seek(12)
 pointers_offset, = unpack('<H', data.read(2))
-data.seek(pointers_offset + 0x38)
 
-#assert data.read(4) == b'\x2a\x00\x00\x00'  # Not sure of the significance
+footer_position = 0x34 + footer_offset
+pointers_position = footer_position + pointers_offset
 
+data.seek(pointers_position)
 message_count, = unpack('<L', data.read(4))
-messages = []
+
+labels_offset = (message_count+1)*8
+labels_position = labels_offset + pointers_position
+
+
 Message = namedtuple('Message', ['label_offset', 'message_pointer'])
+messages = []
+lengths = []
+# instead of looking for stop codes, let's find the lengths. this way, we can attempt to decode scripts without crashing.
 
 for m in range(message_count):
 	messages.append(
 		Message( *unpack('<LL', data.read(8)) )
 	)
+	if m > 0:# filling in the lengths
+		lengths.append(messages[m].message_pointer - messages[m-1].message_pointer)
+lengths.append(footer_position - messages[message_count-1].message_pointer)
+print(lengths[-1:])
 
-labels_pointer = data.tell()  # XXX Can I actually *find* this anywhere?
 
-for message in messages:
+for m in range(message_count):
 	# Find the label and print it as a header
-	label = get_label(data, labels_pointer + message.label_offset)
+	label = get_label(data, labels_position + messages[m].label_offset)
 
-	print(label, message.message_pointer)
+	print(label, messages[m].message_pointer)
 	print('=' * len(label))
 
 	# Extract the actual message
-	message = message_iterator(data, message.message_pointer)
-	message = decode_message(message)
+	messages[m] = decode_message(m)
 
-	print(message, end='\n\n')
+	# sometimes the last message in a file will have a lingering 0x00 in order to 4byte-align the pointer table...
+	# i don't know how to tell when it's just padding or when it's part of the msg (scripts don't have stop codes)
+	# i'll cut the 0x00 out if it's after a [STOP] for the benefit of the localization files.
+	if m+1 == message_count:
+		if messages[m][-7:] == "[STOP]0":
+			messages[m] = messages[m][:-1]
+
+	print(messages[m], end='\n{}\n\n'.format('=' * len(label)))

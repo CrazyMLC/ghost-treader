@@ -247,7 +247,7 @@ commands = {
 	0xff15: '[CLEAR IN {0}]\n\n',#clears the textbox after some time. measured in frames?
 	0xff16: '[BREAK]\n\n',#breaks up narrator text. softlocks when used in a text box.
 	
-	0xff19: '[PORTRAIT {0} FADE {{0}}]',#lower FADE is slower. no portrait barks?
+	0xff19: '[PORTRAIT {0} FADE {{0}}]\n',#lower FADE is slower. no portrait barks?
 	
 	0xff1b: '[MINI_PORTRAIT {0}]\n',#mini portraits on the side of dialogue boxes
 	0xff1c: '[MUSIC {0}]',#changes music. could use another table.
@@ -257,7 +257,7 @@ commands = {
 	0xff20: '[LOWER {0}]',#drops text down, more goes lower.
 	0xff21: '[SCRIPTED_PAUSE]',#pauses until a scripted condition is met. not available on all dialogue. does not clear the textbox.
 	0xff22: '[APPEAR {0}]',#affects fade in speed of narrator text. since it's used to accelerate fade in speed rather than slow it down, i'll just call it 'appear'. could use more testing, effects of the number may not be linear.
-	0xff23: '[SKIP]',#attempts to skip remaining text, doesn't pause on [STOP]
+	0xff23: '[SKIP]',#attempts to skip remaining text, doesn't wait for input on [STOP]
 	0xff24: '[FADE IN {0}]',#fades text in all at once.
 	
 	0xff28: '[VOLUME {0}]',#changes music volume
@@ -275,7 +275,7 @@ stages = {#where is the park???? where is yomiel's death puzzle??
 	'st07': "Kamila's Old House",
 	'st09': "Minister's Office",
 	'st11': "Special Investigation",
-	'st13': "The Chicken Kitchen",
+	'st13': "The Chicken Kitchen",#is this merged with the park because of the chicken kitchen puzzle?
 	'st14': "Luxurious Parlor",
 	'st15': "Epilogue"
 }
