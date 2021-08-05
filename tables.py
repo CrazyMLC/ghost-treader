@@ -252,8 +252,6 @@ commands = {
 	0xff1b: '[MINI_PORTRAIT {0}]\n',#mini portraits on the side of dialogue boxes
 	0xff1c: '[MUSIC {0}]',#changes music. could use another table.
 	
-	0xfffe: '[STOP]',#ends a scene
-	
 	0xff20: '[LOWER {0}]',#drops text down, more goes lower.
 	0xff21: '[SCRIPTED_PAUSE]',#pauses until a scripted condition is met. not available on all dialogue. does not clear the textbox.
 	0xff22: '[APPEAR {0}]',#affects fade in speed of narrator text. since it's used to accelerate fade in speed rather than slow it down, i'll just call it 'appear'. could use more testing, effects of the number may not be linear.
@@ -263,6 +261,8 @@ commands = {
 	0xff28: '[VOLUME {0}]',#changes music volume
 	
 	0xff2d: '[START Event {0}, Scene {{0}}]\n',#Event # seems to roughly correlate with story progress. Scene # seems to be sequential within each event, usually. some files contain scenes from multiple events... as of now, unsure how the game uses this information or if it even matters.
+	
+	0xfffe: '[STOP]',#ends a scene
 }
 
 stages = {#where is the park???? where is yomiel's death puzzle??

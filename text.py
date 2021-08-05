@@ -102,9 +102,8 @@ pointers_position = footer_position + pointers_offset
 data.seek(pointers_position)
 message_count, = unpack('<L', data.read(4))
 
-labels_offset = (message_count+1)*8
+labels_offset = 4+message_count*8
 labels_position = labels_offset + pointers_position
-
 
 Message = namedtuple('Message', ['label_offset', 'message_pointer'])
 messages = []
