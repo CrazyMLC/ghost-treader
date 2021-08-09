@@ -124,7 +124,7 @@ def decode_1LMG(filepath):
 
 def decode_and_save_1LMG(loadpath, savepath):
 	original_stdout = sys.stdout
-	with open(savepath, 'w+', encoding="utf8") as f:
+	with open(savepath, 'w', encoding="utf8") as f:
 		sys.stdout = f # Change the standard output to the file we created.
 		decode_1LMG(loadpath)
 	sys.stdout = original_stdout # Reset the standard output to its original value
