@@ -37,3 +37,4 @@ For now, **ghost-treader** is primarily capable of dealing with english dialogue
 1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
 1. The next of the project's features are still under construction. Hopefully tinke won't be necessary in the future either.
    1. If you know how, you can use the .txt file to help you edit the original **.en.xml** file in a hex editor. It shows you the hex position of each message, and then you can use tables.py to help you navigate from there. After you edit, you follow a process similar to extracting to insert the file back in with tinke. Just, you know, backwards. Don't forget to Pack and Save to ROM after replacing the extracted .en.xml file...
+   2. Another experiement you can try is just extracting a pair of .en.xml and .xml files, and using them to replace st01/st01_game000_Expand files. If you start a new game, you'll see the scene for those files.
