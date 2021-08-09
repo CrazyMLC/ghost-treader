@@ -1,23 +1,23 @@
 from collections import namedtuple
 from io import BytesIO
 from struct import unpack
-from sys import argv
+import sys
+import os
 
 from tables import *
 
-
-def decode_message(m):
-	data.seek(messages[m].message_pointer)
-	message = ''
+def decode_message(data, pointer, length):
+	data.seek(pointer)
+	decoded = ''
 	i = 0
 	
-	while i < lengths[m]>>1:
+	while i < length>>1:
 		char, = unpack('<H', data.read(2))
 		if char in commands:
 			command = commands[char]
 			# if getting parameters would go out of bounds, don't do it.
-			if i+command.count('{0') >= lengths[m]>>1:
-				message += text_table.setdefault(char, r'[0x{0:04x}]'.format(char))
+			if i+command.count('{0') >= length>>1:
+				decoded += text_table.setdefault(char, r'[0x{0:04x}]'.format(char))
 				i+=1
 				continue
 			# okay, time to fetch parameters.
@@ -37,13 +37,11 @@ def decode_message(m):
 				elif command.count('SFX {'):
 					p = sounds.setdefault(param, r'!!!\x{0:04x}'.format(param))
 				command = command.format(p)
-			message += command
+			decoded += command
 		else:
-			message += text_table.setdefault(char, r'[0x{0:04x}]'.format(char))
+			decoded += text_table.setdefault(char, r'[0x{0:04x}]'.format(char))
 		i+=1
-
-	#print(message)
-	return message
+	return decoded
 
 
 def get_label(data, pointer):
@@ -60,80 +58,93 @@ def get_label(data, pointer):
 
 	return label.decode('ASCII')
 
+def decode_1LMG(filepath):
+	with open(filepath, 'rb') as text_file:
+		data = text_file.read()
+	data = BytesIO(data)
+	
+	try:
+		assert data.read(4) == b'1LMG'
+	except:
+		print("Not a 1LMG file.")
+		return "not 1LMG"
 
-with open(argv[1], 'rb') as text_file:
-	data = text_file.read()
-data = BytesIO(data)
+	# find all the important file locations
+	mystery, = unpack('<L', data.read(4))
+	footer_offset, = unpack('<L', data.read(4))
+	pointers_offset, = unpack('<L', data.read(4))
 
+	is_dialogue_file = pointers_offset == 4
+	footer_position = 0x34 + footer_offset
+	pointers_position = footer_position + pointers_offset
 
-"""
-header format: (length 34)
-1LMG (identifier)
-4 byes (???)
-4 bytes (footer pointer)
-4 bytes (pointer table pointer, relative to above)
-4 bytes (end of file pointer, relative to above)
+	data.seek(pointers_position)
+	message_count, = unpack('<L', data.read(4))
 
-data format:
-#
+	labels_offset = 4+message_count*8
+	labels_position = labels_offset + pointers_position
 
-footer format:
-2 bytes (* )
-# string bytes
-# data pointer table
-	4 bytes table length
-	# table
-2 bytes (* )
-# label bytes
-"""
+	Message = namedtuple('Message', ['label_offset', 'message_pointer'])
+	messages = []
+	lengths = []
+	# instead of looking for stop codes, let's find the lengths. this way, we can attempt to decode scripts without crashing.
 
-
-assert data.read(4) == b'1LMG'
-
-# find all the important file locations
-data.seek(8)
-footer_offset, = unpack('<H', data.read(2))
-data.seek(12)
-pointers_offset, = unpack('<H', data.read(2))
-
-footer_position = 0x34 + footer_offset
-pointers_position = footer_position + pointers_offset
-
-data.seek(pointers_position)
-message_count, = unpack('<L', data.read(4))
-
-labels_offset = 4+message_count*8
-labels_position = labels_offset + pointers_position
-
-Message = namedtuple('Message', ['label_offset', 'message_pointer'])
-messages = []
-lengths = []
-# instead of looking for stop codes, let's find the lengths. this way, we can attempt to decode scripts without crashing.
-
-for m in range(message_count):
-	messages.append(
-		Message( *unpack('<LL', data.read(8)) )
-	)
-	if m > 0:# filling in the lengths
-		lengths.append(messages[m].message_pointer - messages[m-1].message_pointer)
-lengths.append(footer_position - messages[message_count-1].message_pointer)
+	for m in range(message_count):
+		messages.append(
+			Message( *unpack('<LL', data.read(8)) )
+		)
+		if m > 0:# filling in the lengths
+			lengths.append(messages[m].message_pointer - messages[m-1].message_pointer)
+	try:# if the message count is 0, the script will crash. better catch that gracefully.
+		lengths.append(footer_position - messages[message_count-1].message_pointer)
+	except:
+		print("File contains no data.")
+		return "no data"
 
 
-for m in range(message_count):
-	# Find the label and print it as a header
-	label = get_label(data, labels_position + messages[m].label_offset)
+	for m in range(message_count):
+		# Find the label and print it as a header
+		label = get_label(data, labels_position + messages[m].label_offset)
 
-	print(label, messages[m].message_pointer)
-	print('=' * len(label))
+		print(label, "Position:", hex(messages[m].message_pointer))
+		print('=' * len(label))
 
-	# Extract the actual message
-	messages[m] = decode_message(m)
+		# Extract the actual message
+		messages[m] = decode_message(data, messages[m].message_pointer, lengths[m])
 
-	# sometimes the last message in a file will have a lingering 0x00 in order to 4byte-align the pointer table...
-	# i don't know how to tell when it's just padding or when it's part of the msg (scripts don't have stop codes)
-	# i'll cut the 0x00 out if it's after a [STOP] for the benefit of the localization files.
-	if m+1 == message_count:
-		if messages[m][-7:] == "[STOP]0":
-			messages[m] = messages[m][:-1]
+		# sometimes the last message in a file will have a lingering 0x0000 in order to 4byte-align the pointer table...
+		# i don't know how to tell when it's just padding or when it's part of the msg (scripts don't have stop codes)
+		# i'll cut the 0x0000 out if it's after a [STOP] for the benefit of the dialogue files.
+		if is_dialogue_file and m+1 == message_count:
+			if messages[m][-7:] == "[STOP]0":
+				messages[m] = messages[m][:-1]
 
-	print(messages[m], end='\n{}\n\n'.format('=' * len(label)))
+		print(messages[m], end='\n{}\n\n'.format('=' * len(label)))
+	return "ok"
+
+def decode_and_save_1LMG(loadpath, savepath):
+	original_stdout = sys.stdout
+	with open(savepath, 'w+', encoding="utf8") as f:
+		sys.stdout = f # Change the standard output to the file we created.
+		decode_1LMG(loadpath)
+	sys.stdout = original_stdout # Reset the standard output to its original value
+
+if __name__ == "__main__":
+	output = "decoded"
+	if not os.path.isdir(output):
+		os.mkdir(output)
+	for v in range(1,len(sys.argv)):
+		if sys.argv[v] == "--output":
+			if os.path.isdir(sys.argv[v+1]):
+				output = sys.argv[v+1]
+				continue
+			print("invalid output path:",sys.argv[v+1])
+			break
+		if os.path.isfile(sys.argv[v]):
+			if sys.argv[v-1] == "--view":
+				decode_1LMG(sys.argv[1])
+				continue
+			new_file = "{}.txt".format(os.path.join(output,os.path.basename(sys.argv[v])))
+			decode_and_save_1LMG(sys.argv[v],new_file)
+			continue
+		print("couldn't process command:",sys.argv[v])
