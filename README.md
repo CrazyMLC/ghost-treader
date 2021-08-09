@@ -1,6 +1,12 @@
 # ghost-treader
 A specialized version of [ghost-tripper](https://github.com/CatTrinket/ghost-tripper) meant to deal with the text files of Capcom's DS release, *Ghost Trick: Phantom Detective*. 
 
+## File guide
+* **tables.py** - The byte-to-text dictionary. This is the work that involves resetting the cartridge with modifications over and over to test theories.
+* **text.py** - This is where all the logic is.
+* **notes.txt** - Some of my personal notes on decoding the 1LMG file format and byte commands.
+* **others** - Don't worry about it.
+
 ## Text files?
 Not counting the multiple languages, there are about 346 ".xml" files in the Ghost Trick ROM.
 Approximately half of these ".xml" files contain dialogue, and the other half contain the scripting language for the game.
