@@ -25,7 +25,7 @@ For now, **ghost-treader** is primarily capable of dealing with english dialogue
 1. Once that's all set up, you'll have to get a **1LMG** file out of the ROM using tinke.
    1. "st01/st01_game000_Expand.en.xml.lz" is recommended for this purpose; it has the english dialogue for the opening scenes of the game.
    1. With your **.en.xml** file selected, click on the **Unpack** button.
-   1. A new **.en.xml** file should show up on the list, with **[1LMG]** to the right of it. Select the file, and click on the **Extract** button, and save the file somewhere.
+   1. A new **.en.xml** file should show up on the list, with **[1LMG]** to the right of it. Select the file, click on the **Extract** button, and save the file somewhere.
 1. This is the easy part. Drag your extracted **.en.xml** file into this project's **text.py**.
 1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
 
