@@ -28,5 +28,7 @@ For now, **ghost-treader** is primarily capable of dealing with english dialogue
    1. A new **.en.xml** file should show up on the list, with **[1LMG]** to the right of it. Select the file, click on the **Extract** button, and save the file somewhere.
 1. This is the easy part. Drag your extracted **.en.xml** file into this project's **text.py**.
 1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
+1. The next of the project's features are still under construction. Hopefully tinke won't be necessary in the future either.
+   1. If you know how, you can use the .txt file to help you edit the original **.en.xml** file in a hex editor. It shows you the hex position of each message, and then you can use tables.py to help you navigate from there. After you edit, you follow a similar process to extracting to insert the file back in with tinke.
 
 (re-insertion coming soon)
