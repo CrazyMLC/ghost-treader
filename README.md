@@ -5,6 +5,7 @@ A specialized version of [ghost-tripper](https://github.com/CatTrinket/ghost-tri
 * **tables.py** - The byte-to-text dictionary. This is the work that involves resetting the cartridge with modifications over and over to test theories.
 * **text.py** - This is where all the logic is.
 * **notes.txt** - Some of my personal notes on decoding the 1LMG file format and byte commands.
+* **CREDITS** - The people I wouldn't have gotten this far without.
 * **others** - Don't worry about it.
 
 ## Text files?
