@@ -15,16 +15,18 @@ Afterwards, you'll (eventually) be able to convert the text files back into 1LMG
 It's certainly possible. All the script files are self-contained, to the point where you can easily move the credits to replace the opening scene of the game.
 Because of how modular the game's scenes are, it should be possible to completely rewrite the game however you like, just by editing 1LMG files. That's a ways off, though.
 
-For now, **ghost-treader** is primarily capable of dealing with dialogue 1LMG files.
+For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files.
 
 ## How to use (Windows)
-1. First, you're going to need [tinke](https://github.com/pleonex/tinke) or one of its many forks.
-1. Then, you're going to need the Ghost Trick ROM. It's recommended that you get it by copying the cartridge that you own.
-1. You'll have to open the ROM in tinke, and locate a file with ".xml" in its filename.
-   1. Opening the "st01" folder and locating "st01_game000_Expand.en.xml.lz" is recommended for this purpose; it has the dialogue for the opening scenes of the game.
-1. With your ".xml" file located, click on the "Unpack" button.
-1. A new file should be visible underneath, with "[1LMG]" to the right of it. Select the file, and click on the "Extract" button.
-1. After you've saved this file on your computer using tinke, drag it into "text.py" from **ghost-treader**.
+1. First, you're going to need some resources.
+   1. You'll need Python 3, as well as this repo cloned onto your device.
+   1. You'll be needing [tinke](https://github.com/pleonex/tinke)'s binary, or one of its many forks.
+   1. Then, you're going to need the Ghost Trick ROM. It's recommended that you dump the cartridge that you bought.
+1. Once that's all set up, you'll have to get a **1LMG** file out of the ROM using tinke.
+   1. "st01/st01_game000_Expand.en.xml.lz" is recommended for this purpose; it has the english dialogue for the opening scenes of the game.
+   1. With your **.en.xml** file selected, click on the **Unpack** button.
+   1. A new **.en.xml** file should show up on the list, with **[1LMG]** to the right of it. Select the file, and click on the **Extract** button, and save the file somewhere.
+1. This is the easy part. Drag your extracted **.en.xml** file into this project's **text.py**.
 1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
 
 (re-insertion coming soon)
