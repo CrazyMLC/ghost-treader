@@ -13,7 +13,8 @@ Afterwards, you'll be able to convert the text files back into 1LMG, and insert 
 
 ### Scripting language? Does that mean you can modify more than just the dialogue?
 Most of the filenames are in this format **##.xml.lz** where ## is a two letter language code.
-But some of the filenames don't have any language code. Their filenames end with only **.xml.lz**. These files contain the scripting language for the game.
+But some of the filenames don't have any language code; these filenames end with only **.xml.lz**. These files contain the scripting language for the game.
+
 Experiments have confirmed this, such as editing the string filepaths in root .xml.lz files, or editing object names in game .xml.lz files.
 The scripting language is a bit difficult to parse though, so no progress has been made on it.
 
