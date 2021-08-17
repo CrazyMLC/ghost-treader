@@ -1,23 +1,27 @@
-header format: (length 34)
-1LMG (file type)
-4 byes (???)
-4 bytes (footer pointer)
-4 bytes (pointer table pointer, relative to above)
-4 bytes (end of file pointer, relative to above)
+header format: (length 52 bytes)
+4 bytes '1LMG' (file type)
+4 byes (??? script related)
+4 bytes (data length)
+4 bytes (string length)
+4 bytes (table + label length)
+32 bytes (blank?)
 
 data format:
-#
+# data (always multiples of 4 in size, has null padding if necessary)
+	# data bytes (no known consistent structure, although dialogue files always start with 0xff2d 0x#### 0x#### and end with 0xfffe for each entry)
 
 footer format:
-2 bytes (* ) (always 4-aligned, may have a 0x0000 of padding before it)
-# string bytes, null terminated (object names, function names, filepaths...)
-# data pointer table (always 4-aligned, may have a 0x0000 of padding before it)
+# strings (always multiples of 4 in size, has null padding if necessary)
+	2 bytes (* )
+	# string bytes, null terminated (object names, function names, filepaths...)
+# data pointer table (always multiples of 4 in size, never needs padding)
 	4 bytes table length
 	# table
 		4 bytes label offset
 		4 bytes data absolute pointer
-2 bytes (* ) (always 4-aligned, no padding needed because of table)
-# label bytes, null terminated
+# labels (always multiples of 4 in size, has null padding if necessary)
+	2 bytes (* ) (always 4-aligned, padding never needed)
+	# label bytes, null terminated
 
 
 

@@ -143,10 +143,12 @@ text_table = {
 	0xfe: '♪',
 	0xff: ' ',
 
-	# XXX Obtain images, move out of tables
-	0x0116: '[[BACK]]',
-	0x0117: '[[TRICK]]',
-	0x0118: '[[GHOST]]',
+}
+
+images = {
+	0x0116: '[BACK]',
+	0x0117: '[TRICK]',
+	0x0118: '[GHOST]',
 }
 
 colors = {
@@ -229,7 +231,7 @@ sounds = {
 }
 
 commands = {
-	0xff01: '\n',
+	0xff01: '[NEW]\n',#making this into a [] code, so that \n characters can be ignored by the encoder and used solely to make text files easier to read. hard choice, but i think this makes everything less finnicky overall. should also help the whole newline changing with OS problem?
 	0xff02: '[CLEAR]\n\n',#waits for input, then clears the textbox.
 	0xff03: '[CENTER]',#centers text printed afterwards, until a new line. produced undesirable results when used in the middle of a line.
 	0xff04: '[SPEED {0}]',#text speed, higher seems slower. frames per character?
@@ -247,7 +249,7 @@ commands = {
 	0xff15: '[CLEAR IN {0}]\n\n',#clears the textbox after some time. measured in frames?
 	0xff16: '[BREAK]\n\n',#breaks up narrator text. softlocks when used in a text box.
 	
-	0xff19: '[PORTRAIT {0} FADE {{0}}]\n',#lower FADE is slower. no portrait barks?
+	0xff19: '[FADE_PORTRAIT {0} IN {{0}}]\n',#lower FADE is slower. no portrait barks?
 	
 	0xff1b: '[MINI_PORTRAIT {0}]\n',#mini portraits on the side of dialogue boxes
 	0xff1c: '[MUSIC {0}]',#changes music. could use another table.
@@ -255,14 +257,14 @@ commands = {
 	0xff20: '[LOWER {0}]',#drops text down, more goes lower.
 	0xff21: '[SCRIPTED_PAUSE]',#pauses until a scripted condition is met. not available on all dialogue. does not clear the textbox.
 	0xff22: '[APPEAR {0}]',#affects fade in speed of narrator text. since it's used to accelerate fade in speed rather than slow it down, i'll just call it 'appear'. could use more testing, effects of the number may not be linear.
-	0xff23: '[SKIP]',#attempts to skip remaining text, doesn't wait for input on [STOP]
-	0xff24: '[FADE IN {0}]',#fades text in all at once.
+	0xff23: '[SKIP]',#attempts to skip the remainder of the current textbox, doesn't allow waiting for input
+	0xff24: '[FADE {0}]',#fades text in all at once.
 	
 	0xff28: '[VOLUME {0}]',#changes music volume
 	
 	0xff2d: '[START Event {0}, Scene {{0}}]\n',#Event # seems to roughly correlate with story progress. Scene # seems to be sequential within each event, usually. some files contain scenes from multiple events... as of now, unsure how the game uses this information or if it even matters.
 	
-	0xfffe: '[STOP]',#ends a scene
+	0xfffe: '[STOP]',#waits for input, then ends a scene
 }
 
 stages = {#where is the park???? where is yomiel's death puzzle??
@@ -278,4 +280,9 @@ stages = {#where is the park???? where is yomiel's death puzzle??
 	'st13': "The Chicken Kitchen",#is this merged with the park because of the chicken kitchen puzzle?
 	'st14': "Luxurious Parlor",
 	'st15': "Epilogue"
+}
+
+byte_string = {
+	'outside': '[0x{0:04x}]',
+	'inside': '0x{0:04x}'
 }
