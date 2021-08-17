@@ -9,7 +9,7 @@ While presumably they were originally some form of .xml file, they've been encod
 For our purposes, we'll refer to this new format by their first 4 bytes in ascii: 1LMG
 
 By using this tool, you'll be able to convert these 1LMG files into human-readable text files, which you can then go on to edit in your favorite text editor.
-Afterwards, you'll (eventually) be able to convert the text files back into 1LMG, and insert them into the game.
+Afterwards, you'll be able to convert the text files back into 1LMG, and insert them into the game.
 
 ### Scripting language? Does that mean you can modify more than just the dialogue?
 It's certainly possible. All the script files are self-contained, to the point where you can easily move the credits to replace the opening scene of the game.
