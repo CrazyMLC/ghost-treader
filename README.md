@@ -1,13 +1,6 @@
 # ghost-treader
 A specialized version of [ghost-tripper](https://github.com/CatTrinket/ghost-tripper) meant to deal with the text files of Capcom's DS release, *Ghost Trick: Phantom Detective*. 
 
-## File guide
-* **tables.py** - The byte-to-text dictionary. This is the work that involves resetting the cartridge with modifications over and over to test theories.
-* **text.py** - This is where all the logic is.
-* **notes.txt** - Some of my personal notes on decoding the 1LMG file format and byte commands.
-* **CREDITS** - The people I wouldn't have gotten this far without.
-* **others** - Don't worry about it.
-
 ## Text files?
 Not counting the multiple languages, there are about 346 ".xml" files in the Ghost Trick ROM.
 Approximately half of these ".xml" files contain dialogue, and the other half contain the scripting language for the game.
@@ -24,6 +17,14 @@ Because of how modular the game's scenes are, it should be possible to completel
 
 For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files. (Some accent characters may not be in tables.py)
 
+## File guide
+* **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
+* **encode.py** - Encodes your decided text files back into a format Ghost Trick can use. Just like decode.py, just drag a decoded file in and check .\encoded\.
+* **tables.py** - The byte-to-text dictionary. This is probably the first place you should look, if you want to contribute.
+* **message.py** - Defines the Message class, which holds most of the file information, and does most of the encoding/decoding work.
+* **notes.txt** - Some of my personal notes on decoding the 1LMG file format and byte commands.
+* **CREDITS** - The people this project wouldn't have gotten this far without.
+
 ## How to use (Windows)
 1. First, you're going to need some resources.
    1. You'll need Python 3, as well as this repo cloned onto your device.
@@ -31,10 +32,18 @@ For now, **ghost-treader** is primarily capable of dealing with english dialogue
    1. Then, you're going to need the Ghost Trick ROM. It's recommended that you dump the cartridge that you bought.
 1. Once that's all set up, you'll have to get a **1LMG** file out of the ROM using tinke.
    1. "st01/st01_game000_Expand.en.xml.lz" is recommended for this purpose; it has the english dialogue for the opening scenes of the game.
-   1. With your **.en.xml** file selected, click on the **Unpack** button.
-   1. A new **.en.xml** file should show up on the list, with **[1LMG]** to the right of it. Select the file, click on the **Extract** button, and save the file somewhere.
-1. This is the easy part. Drag your extracted **.en.xml** file into this project's **text.py**.
-1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
-1. The next of the project's features are still under construction. Hopefully tinke won't be necessary in the future either.
-   1. If you know how, you can use the .txt file to help you edit the original **.en.xml** file in a hex editor. It shows you the hex position of each message, and then you can use tables.py to help you navigate from there.
-   2. Another experiment you can try is just extracting a pair of .en.xml and .xml files, and using them to replace st01/st01_game000_Expand files. If you start a new game, you'll see the scene for those files.
+   1. With your **.en.xml.lz** file selected, click on the **Unpack** button.
+   1. A new **.en.xml.lz** file should show up on the list, with **[1LMG]** to the right of it. Select the file, click on the **Extract** button, and save the file somewhere.
+1. This is the easy part. Time to edit the file!
+   1. Drag your extracted **.en.xml.lz** file into this project's **decode.py**.
+   1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
+   1. You can look at **tables.py** to find more information on the various commands that have been discovered.
+1. Now to encode the text file back into a 1LMG file.
+   1. Drag the text file into this project's **encode.py**.
+   1. Check the "encoded" subfolder. If there weren't any errors, your file should be good to go to be reinserted with tinke.
+1. Time to insert the file back into Ghost Trick.
+   1. In tinke, navigate back to and select file you originally extracted. (Don't forget to unpack like before!)
+   1. Click the **Change file** button and use your encoded file.
+   1. Remember the file that you had selected when you clicked Unpack in tinke? You're going to have to select it again, and click **Pack**.
+   1. Click **Save ROM** and save your new ROM. (Don't overwrite your original!)
+1. Open the new ROM file in an emulator and admire your work.
