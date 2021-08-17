@@ -12,10 +12,12 @@ By using this tool, you'll be able to convert these 1LMG files into human-readab
 Afterwards, you'll be able to convert the text files back into 1LMG, and insert them into the game.
 
 ### Scripting language? Does that mean you can modify more than just the dialogue?
-It's certainly possible. All the script files are self-contained, to the point where you can easily move the credits to replace the opening scene of the game.
-Because of how modular the game's scenes are, it should be possible to completely rewrite the game however you like, just by editing 1LMG files. That's a ways off, though.
+Most of the filenames are in this format **##.xml.lz** where ## is a two letter language code.
+But some of the filenames don't have any language code. Their filenames end with only **.xml.lz**. These files contain the scripting language for the game.
+Experiments have confirmed this, such as editing the string filepaths in root .xml.lz files, or editing object names in game .xml.lz files.
+The scripting language is a bit difficult to parse though, so no progress has been made on it.
 
-For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files. (Some accent characters may not be in tables.py)
+For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files. (Some accent characters used by other languages may not be in tables.py)
 
 ## File guide
 * **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
