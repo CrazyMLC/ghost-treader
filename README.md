@@ -22,7 +22,7 @@ Afterwards, you'll (eventually) be able to convert the text files back into 1LMG
 It's certainly possible. All the script files are self-contained, to the point where you can easily move the credits to replace the opening scene of the game.
 Because of how modular the game's scenes are, it should be possible to completely rewrite the game however you like, just by editing 1LMG files. That's a ways off, though.
 
-For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files.
+For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files. (Some accent characters may not be in tables.py)
 
 ## How to use (Windows)
 1. First, you're going to need some resources.
@@ -36,5 +36,5 @@ For now, **ghost-treader** is primarily capable of dealing with english dialogue
 1. This is the easy part. Drag your extracted **.en.xml** file into this project's **text.py**.
 1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
 1. The next of the project's features are still under construction. Hopefully tinke won't be necessary in the future either.
-   1. If you know how, you can use the .txt file to help you edit the original **.en.xml** file in a hex editor. It shows you the hex position of each message, and then you can use tables.py to help you navigate from there. After you edit, you follow a process similar to extracting to insert the file back in with tinke. Just, you know, backwards. Don't forget to Pack and Save to ROM after replacing the extracted .en.xml file...
-   2. Another experiement you can try is just extracting a pair of .en.xml and .xml files, and using them to replace st01/st01_game000_Expand files. If you start a new game, you'll see the scene for those files.
+   1. If you know how, you can use the .txt file to help you edit the original **.en.xml** file in a hex editor. It shows you the hex position of each message, and then you can use tables.py to help you navigate from there.
+   2. Another experiment you can try is just extracting a pair of .en.xml and .xml files, and using them to replace st01/st01_game000_Expand files. If you start a new game, you'll see the scene for those files.
