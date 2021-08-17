@@ -15,7 +15,7 @@ Afterwards, you'll be able to convert the text files back into 1LMG, and insert 
 Most of the filenames are in this format **##.xml.lz** where ## is a two letter language code.
 But some of the filenames don't have any language code; they end with only **.xml.lz**. These files contain the scripting language for the game.
 
-Experiments have confirmed this, such as editing the string filepaths in root .xml.lz files, or editing object names in game .xml.lz files.
+Experiments have confirmed this, such as editing the filepaths in root.xml.lz files, or editing object names in game###\_Expand.xml.lz files.
 The scripting language is a bit difficult to parse though, so no progress has been made on it.
 
 For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files. (Some accent characters used by other languages may not be in tables.py)
