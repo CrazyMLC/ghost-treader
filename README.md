@@ -37,6 +37,7 @@ For now, **ghost-treader** is primarily capable of dealing with english dialogue
 1. This is the easy part. Time to edit the file!
    1. Drag your extracted **.en.xml.lz** file into this project's **decode.py**.
    1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
+   1. Make some changes! Make someone say something funny, and it'll be easy to notice.
    1. You can look at **tables.py** to find more information on the various commands that have been discovered.
 1. Now to encode the text file back into a 1LMG file.
    1. Drag the text file into this project's **encode.py**.
