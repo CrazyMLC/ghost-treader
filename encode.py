@@ -54,10 +54,12 @@ def encode_1LMG(loadpath, savepath):
 		labels.write(message.label.encode() + bytes(1))
 	# Let's make sure that each sections is a multiple of 4 bytes.
 	temp = data.seek(0,2) % 4
-	data.write(bytes(4-temp))
+	if temp != 0:
+		data.write(bytes(4-temp))
 	
 	temp = labels.seek(0,2) % 4
-	labels.write(bytes(4-temp))
+	if temp != 0:
+		labels.write(bytes(4-temp))
 	# Now we fill in the header...
 	header.write( pack('<LLL', data.seek(0,2), strings.seek(0,2), table.seek(0,2)+labels.seek(0,2)) )
 	header.write(bytes(0x20))
