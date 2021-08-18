@@ -65,19 +65,11 @@ def encode_1LMG(loadpath, savepath):
 	header.write(bytes(0x20))
 	# Well, that was easy. Time to save the file.
 	with open(savepath, 'wb') as text_file:
-		header.seek(0)
-		text_file.write(header.read())
-		data.seek(0)
-		text_file.write(data.read())
-		strings.seek(0)
-		text_file.write(strings.read())
-		table.seek(0)
-		text_file.write(table.read())
-		labels.seek(0)
-		text_file.write(labels.read())
+		for part in [header,data,strings,table,labels]:
+			part.seek(0)
+			text_file.write(part.read())
 	
-	
-	
+
 def printProgressBar (iteration, total):
 	"""Based on stack overflow 'Text Progress Bar in the Console [closed]'"""
 	percent = "{0:.1f}".format(100 * (iteration / float(total)))

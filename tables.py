@@ -122,15 +122,15 @@ text_table = {
 	0xe5: '(',
 	0xe6: ')',
 
-	0xe9: '“',  # Not used?
-	0xea: '”',  # Curly but used for all quotation marks anyway
+	0xe9: '“', # Not used?
+	0xea: '"',#'”',  # Curly but used for all quotation marks anyway (edited to normal " for easier editing)
 
 	0xed: ':',
 
 	0xef: ',',
 
 	0xf2: '*',
-	0xf3: '’',
+	0xf3: "'",#'’', # (edited to normal ' for easier editing)
 	0xf4: '-',
 
 	0xf7: '%',
