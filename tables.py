@@ -146,15 +146,38 @@ text_table = {
 }
 
 images = {
+	0x0113: '[COIN]',
+	0x0114: '[DPAD]',
+	0x0115: '[JOWD]',
 	0x0116: '[BACK]',
 	0x0117: '[TRICK]',
 	0x0118: '[GHOST]',
+	0x0119: '[RESET]',
+	0x011a: '[JOURNAL]',
+	0x011b: '[SWAP]',
+	0x011c: '[MISSILE]',
+	0x011d: '[SISSEL]',
 }
 
 colors = {
+	0x0: 'WHITE',#not particularly useful because of the textbox background
+	#0x1: 'glitch',
+	0x2: 'GREY',#a little glitchy looking
+	#0x3: 'glitch2',
+	#0x4: 'glitch_red',
+	0x5: 'LIGHT_RED',
 	0x6: 'RED',
+	#0x7: 'glitch_red2',
+	#0x8: 'glitch_redblue',#seems like the color data works off of using the actual binary data of the input as flags
 	0x9: 'BLUE',
+	#0xa: 'glitch_light_bluegreen',
+	#0xb: 'glitch_bluegreen',
+	0xc: 'GREEN',
+	#0xd: 'glitch_light_greygreen',
+	#0xe: 'glitch_greygreen',
 	0xf: 'BLACK',
+	#0x10: 'glitch3',
+	#colors up to 32 appear glitched still, but seemed to be developing shadows. could be there's more data further up.
 }
 
 portraits = {# Every portrait has a flipped version, except the 'empty' potraits. Flipped portraits are always right after the unflipped portrait.
@@ -315,7 +338,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0xe7: 'Minister_smile',
 	0xe9: 'Minister_empty',
 	
-	0xea: 'Bailey_serious',
+	0xea: 'Bailey',
 	0xec: 'Bailey_empty',
 	
 	0xee: 'CardGuard',
@@ -352,7 +375,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	#0x10e: 'Message'
 	#0x10f: crash
 }
-def fill_in_portraits():
+def fill_in_portraits():# reversed portraits were not listed above, to keep the list short. let's fix that.
 	temp = []
 	for key,item in portraits.items():
 		if key+1 not in portraits:
@@ -363,6 +386,7 @@ fill_in_portraits()
 
 
 mini_portraits = {
+	0x0: 'None3',
 	0x1: 'Sissel',
 	0x2: 'Missile',
 	0x3: 'Lynne',
@@ -370,16 +394,60 @@ mini_portraits = {
 	0x5: 'None',
 	0x6: 'None2',#??
 	0x7: 'Guardian',
-	0x8: 'Cat'
+	0x8: 'Cat',
+	0x9: 'Jowd',
+	0xa: 'Minister',
+	0xb: 'Cabanela',
+	0xc: 'PidgeonMan',
+	0xd: 'Sissel_soul',
+	0xe: 'None_female'# This 'None' does a high pitched bark used for female characters. There doesn't appear to be an equivalent for the male bark? maybe it's not an actual mini portrait, just glitched data.
+	# Ones after this are glitched data
 }
 
 sounds = {
-	0x00: 'silence',
-	
+	0x0: 'silence',
+	0x1: 'menu_select',
+	0x2: 'menu_confirm',
+	0x3: 'menu_cancel',
+	0x4: 'menu_disabled',
+	0x5: 'menu_text',
+	0x6: 'male_bark',
+	0x7: 'female_bark',
+	0x8: 'menu_quit',
+	0x9: 'menu_back',#unsure about the menu sfx namings but w/e
+	0xa: 'ding',#some kind of musical ding sound?
+	0xb: 'time_resume',#used when control returns during 4mbd
+	0xc: 'fate_change',
+	0xd: 'new_info',
+	0xe: 'ghost_world',
+	0xf: 'cutscene',
+	0x10: 'ghost_move',
+	0x11: 'ghost_trick',
+	0x12: 'ghost_ping',
+	0x13: 'telephone',
+	0x14: 'phone_answer',
+	#these next ones are the most relevant to dialogue
 	0x15: 'surprise',
 	0x16: 'intrigue',
 	0x17: 'yell',
-	0x18: 'slam'
+	0x18: 'slam',
+	
+	0x19: 'ding2',#another unfamiliar ding type sound?
+	0x1a: 'save',
+	0x1b: 'flashback',
+	0x1c: 'time_travel',
+	0x1d: 'ghost_talk',#loops forever until somehow cancelled?
+	0x1e: 'ghost_switch',
+	0x1f: 'ghost_fail',#don't actually remember what this is...
+	0x20: 'fan_loop',#some kind of fan noise? loops forever
+	0x21: 'silence2',#?
+	0x22: 'door_open',
+	0x23: 'door_close',
+	0x24: 'water_drop',
+	0x25: 'rat_talk',
+	0x26: 'rat_hurt',
+	0x27: 'shaker',#idk what this is
+	#there are many, many sfx in this table, and very few are relevant to dialogue. maybe scripts use these?
 }
 
 commands = {
