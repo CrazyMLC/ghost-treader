@@ -450,6 +450,60 @@ sounds = {
 	#there are many, many sfx in this table, and very few are relevant to dialogue. maybe scripts use these?
 }
 
+music = {
+	0x0: 'silence',
+	0x1: 'ghost_trick',
+	0x2: 'fate_changed',
+	0x3: 'fate_changed_variation',
+	0x4: '4_minutes',
+	0x5: '4_minutes_variation',
+	0x6: 'count_down',
+	#0x7: 'unused_jingle',
+	0x8: 'suspicion',
+	0x9: 'world_of_dead',
+	0xa: 'deadline',
+	0xb: 'ray_theme',
+	0xc: 'lynne_theme',
+	0xd: 'reincarnation',
+	0xe: 'beauty_and_dandy',
+	0xf: 'awakening',
+	0x10: 'emma_theme',
+	0x11: 'cabanela_theme',
+	0x12: 'chicken_paradise',
+	0x13: 'imprisoned',
+	0x14: 'complication',
+	0x15: 'welcome_to_salon',
+	0x16: 'minister_theme',
+	0x17: 'darkness',
+	0x18: 'chase',
+	0x19: 'jowd_theme',
+	0x1a: 'trauma',
+	0x1b: 'saying_goodbye',
+	0x1c: 'providence',
+	0x1d: 'dead_afterimage',
+	0x1e: 'prologue',
+	0x1f: 'nothingness',
+	0x20: 'dashing_enigma',
+	0x21: 'chained_past',
+	0x22: 'desperate_struggle',
+	0x23: 'epilogue',
+	0x24: 'providence2',#?
+	0x25: 'intermission',
+	#0x26: 'unused_jingle2',
+	#0x27: 'beta_complication',
+	#0x28: 'beta_reincarnation',
+	#0x29: 'unused_theme',
+	#0x2a: 'unused_explore',#some kind of junkyard/invetigation theme maybe?
+	0x2b: 'missile_theme',
+	#0x2c: 'unused_peaceful',
+	#0x2d: 'beta_minister',
+	#0x2e: 'unused_fancy',
+	#0x2f: 'unused_jingle3',
+	#0x30: 'unused_reflection',
+	#0x31: 'beta_emma',
+	0x32: 'jingle'
+}
+
 commands = {
 	0xff01: '[BREAK]\n',#making this into a [] code, so that \n characters can be ignored by the encoder.
 	0xff02: '[WAIT]\n\n',#waits for input, then clears the textbox.

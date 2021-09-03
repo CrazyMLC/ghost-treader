@@ -86,6 +86,8 @@ class Message:
 						p = portraits.setdefault(param, byte_string['inside'].format(param))
 					elif command.count('SFX {'):
 						p = sounds.setdefault(param, byte_string['inside'].format(param))
+					elif command.count('MUSIC {'):
+						p = music.setdefault(param, byte_string['inside'].format(param))
 					command = command.format(p)
 				self.decoded += command
 			elif char in images:
@@ -160,6 +162,11 @@ class Message:
 							params[v] = encode_portraits[param]
 						elif tag[0] == "SFX":
 							for key,value in sounds.items():
+								if param == value:
+									params[v] = key
+									break
+						elif tag[0] == "MUSIC":
+							for key,value in music.items():
 								if param == value:
 									params[v] = key
 									break
