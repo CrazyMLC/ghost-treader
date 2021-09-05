@@ -17,10 +17,15 @@ For now however, **ghost-treader** only works with dialogue files.
 ## File guide
 * **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
 * **encode.py** - Encodes your decoded text files back into a format Ghost Trick can use. Just like decode.py, just drag a decoded file in and check .\encoded\\.
-* **tables.py** - The byte-to-text dictionary. This is probably the first place you should look, if you want to contribute.
+* **tables.py** - The byte-to-text dictionary. This is probably the first place you should look, if you start seeing hex numbers popping up.
 * **message.py** - Defines the Message class, which holds most of the file information, and does most of the encoding/decoding work.
 * **notes.txt** - Some of my personal notes on decoding the 1LMG file format and byte commands.
 * **CREDITS** - The people this project wouldn't have gotten this far without.
+
+## To-do list
+1. Remove the need for Tinke.
+2. Discover the rest of the functions used in dialogue.
+3. Figure out the scripting language.
 
 ## How to use (Windows)
 1. First, you're going to need some resources.
