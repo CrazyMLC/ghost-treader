@@ -205,8 +205,10 @@ colors = {
 }
 
 portraits = {# Every portrait has a flipped version, except the 'empty' potraits. Flipped portraits are always right after the unflipped portrait.
-	#0x00: 'Broken',
+	# 'empty' portraits serve multiple functions. the main reason they're used is to not obscure the game screen, but there's a reason each character has their own empty sprites.
+	# Each 'empty' plays that character's bark sound effect, (masculine or feminine), as well as showing that character's icon in the text log. That's also why some characters have multiple empty sprites.
 	
+	#0x00: 'Broken',
 	0x01: 'Jeego',
 	#0x02: 'Jeego_r',
 	0x03: 'Lynne_smile',
@@ -235,18 +237,18 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0x2b: 'Sissel_think',
 	0x2d: 'Sissel_sweat',
 	0x2f: 'Sissel_befuddled',
-	0x31: 'Sissel_ghost',
-	0x33: 'Sissel_empty2',####
+	0x31: 'Sissel_soul',
+	0x33: 'Sissel_soul_empty',
 	0x34: 'Sissel_shrug',
 	0x36: 'Sissel_surprise',
 	0x38: 'Sissel_pensive',
 	0x3a: 'Sissel_shout',
 	0x3c: 'Sissel_cat',
-	0x3e: 'Sissel_empty3',####
-	0x3f: 'Yomiel_machine',
-	0x41: 'Yomiel_empty',
+	0x3e: 'Sissel_cat_empty',
+	0x3f: 'Yomiel_junk',
+	0x41: 'Yomiel_junk_empty',
 	0x42: 'Yomiel_evil',
-	0x44: 'Sissel_empty',####The first(only?) empty that sissel uses
+	0x44: 'Sissel_empty',
 	0x45: 'Yomiel_smile',
 	0x47: 'Yomiel_frown',
 	0x49: 'Yomiel_think',
@@ -257,7 +259,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0x53: 'Yomiel_pensive',
 	0x55: 'Yomiel_shout',
 	0x57: 'Yomiel_evil2',
-	0x59: 'Yomiel_empty',#####
+	0x59: 'Yomiel_empty',
 	0x5a: 'Sissel_smile2',
 	0x5c: 'Sissel_peek',
 	
@@ -280,7 +282,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0x75: 'Missile',
 	0x77: 'Missile_old',
 	0x79: 'Missile_empty',
-	0x7a: 'Missile_empty2',
+	0x7a: 'Missile_old_empty',
 	
 	0x7b: 'Jeego2',
 	0x7d: 'Jeego_empty',
@@ -292,7 +294,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0x84: 'Ray_soul',#when ray speaks over a soul
 	0x86: 'Ray_empty',#plays ray's portrait noise on text boxes
 	
-	0x88: 'Robot',
+	0x87: 'Robot',
 	
 	0x89: 'Cabanela_smile',
 	0x8b: 'Cabanela_empty',#?
@@ -365,7 +367,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0xea: 'Bailey',
 	0xec: 'Bailey_empty',
 	
-	0xee: 'CardGuard',
+	0xed: 'CardGuard',
 	
 	0xef: 'ArmedGuard',
 	
@@ -410,13 +412,13 @@ fill_in_portraits()
 
 
 mini_portraits = {
-	0x0: 'None3',
+	0x0: 'None',
 	0x1: 'Sissel',
 	0x2: 'Missile',
 	0x3: 'Lynne',
 	0x4: 'Ray',
-	0x5: 'None',
-	0x6: 'None2',#??
+	0x5: 'Ray_empty',
+	0x6: 'Ray_grey_empty',
 	0x7: 'Guardian',
 	0x8: 'Cat',
 	0x9: 'Jowd',
@@ -424,7 +426,7 @@ mini_portraits = {
 	0xb: 'Cabanela',
 	0xc: 'PidgeonMan',
 	0xd: 'Sissel_soul',
-	0xe: 'None_female'# This 'None' does a high pitched bark used for female characters. There doesn't appear to be an equivalent for the male bark? maybe it's not an actual mini portrait, just glitched data.
+	0xe: 'Kamila'# Kamila lacks a mini portrait, but her icon still shows in the text log.
 	# Ones after this are glitched data
 }
 
