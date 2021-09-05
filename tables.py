@@ -113,26 +113,32 @@ text_table = {
 	0x6f: 'ú',
 	0x70: 'û',
 	0x71: 'ü',
-
+	0x72: '_',#0x72 is blank, but since there's no underscore(?), we'll use it as such.
 	0x73: '¡',
 	0x74: '¿',
-
+	#0x75-0xe0 are blank
 	0xe1: '.',
-
+	0xe2: '→',
+	0xe3: '「',
+	0xe4: '」',
 	0xe5: '(',
 	0xe6: ')',
-
+	0xe7: '『',
+	0xe8: '』',
 	0xe9: '“', # Not used?
 	0xea: '"',#'”',  # Curly but used for all quotation marks anyway (edited to normal " for easier editing)
-
+	0xeb: '▼',
+	0xec: '▲',
 	0xed: ':',
-
+	0xee: '、', #??
 	0xef: ',',
-
+	0xf0: '+',
+	0xf1: '/',
 	0xf2: '*',
 	0xf3: "'",#'’', # (edited to normal ' for easier editing)
 	0xf4: '-',
-
+	0xf5: '〮',#?
+	0xf6: '〪',#?
 	0xf7: '%',
 	0xf8: '…',  # XXX Vertically centered
 	0xf9: '~',
@@ -142,7 +148,25 @@ text_table = {
 	0xfd: '☆',
 	0xfe: '♪',
 	0xff: ' ',
-
+	0x100: '–',#a raised dash compared to 0xf4
+	0x101: '”',#it's a normal quote, but that's in use by 0xea for editing purposes
+	#0x102: '[',
+	#0x103: ']',#need to reserve these for tags...
+	0x104: '$',
+	0x105: '#',
+	0x106: '>',
+	0x107: '<',
+	0x108: '=',
+	0x109: '◆',
+	0x10a: '∈',
+	0x10b: '∀',
+	0x10c: ';',
+	0x10d: '∋',
+	0x10e: '⊇',
+	0x10f: '⊂',
+	0x110: '○',
+	0x111: '—',
+	0x112: 'χ',
 }
 
 images = {
@@ -487,7 +511,7 @@ music = {
 	0x21: 'chained_past',
 	0x22: 'desperate_struggle',
 	0x23: 'epilogue',
-	0x24: 'providence2',#?
+	0x24: 'providence_skip_intro',#?
 	0x25: 'intermission',
 	#0x26: 'unused_jingle2',
 	#0x27: 'beta_complication',
