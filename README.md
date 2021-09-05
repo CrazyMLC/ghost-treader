@@ -2,23 +2,16 @@
 A specialized version of [ghost-tripper](https://github.com/CatTrinket/ghost-tripper) meant to deal with the text files of Capcom's DS release, *Ghost Trick: Phantom Detective*. 
 
 ## Text files?
-Not counting the multiple languages, there are about 346 ".xml" files in the Ghost Trick ROM.
-Approximately half of these ".xml" files contain dialogue, and the other half contain the scripting language for the game.
+There are hundreds of text files within the Ghost Trick ROM. Some of them are script files, but the majority are dialogue files.
 
-While presumably they were originally some form of .xml file, they've been encoded into a new format.
-For our purposes, we'll refer to this new format by their first 4 bytes in ascii: 1LMG
+**ghost-treader** is able to decode all of these files into plaintext, as well as encode that plaintext back into a file the game can read.
+Basically, you can edit the dialogue in any way you like. You can even add or remove text boxes, change portraits, the works.
 
-By using this tool, you'll be able to convert these 1LMG files into human-readable text files, which you can then go on to edit in your favorite text editor.
-Afterwards, you'll be able to convert the text files back into 1LMG, and insert them into the game.
-
-### Scripting language? Does that mean you can modify more than just the dialogue?
+### Script files? Does that mean you can modify more than just the dialogue?
 Most of the filenames are in this format **##.xml.lz** where ## is a two letter language code.
 But some of the filenames don't have any language code; they end with only **.xml.lz**. These files contain the scripting language for the game.
 
-Experiments have confirmed this, such as editing the filepaths in root.xml.lz files, or editing object names in game###\_Expand.xml.lz files.
-The scripting language is a bit difficult to parse though, so no progress has been made on it.
-
-For now, **ghost-treader** is primarily capable of dealing with english dialogue 1LMG files. (Some accent characters used by other languages may not be in tables.py)
+Efforts have focused on the much easier task of understanding the dialogue files, but the script files aren't to far away from being understood as well.
 
 ## File guide
 * **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
