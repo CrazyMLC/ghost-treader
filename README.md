@@ -11,7 +11,8 @@ Basically, you can edit the dialogue in any way you like. You can even add or re
 All of the dialogue files are in the format **##.xml.lz**, where ## is a two letter language code.
 But some of the filenames don't have any language code; they end with only **.xml.lz**. These files contain the scripting language for the game.
 
-Efforts have focused on the much easier task of understanding the dialogue files, but the script files aren't to far away from being understood as well.
+Efforts have focused on the much easier task of understanding the dialogue files, but the script files could be understood as well, with a bit of work.
+For now however, **ghost-treader** only works with dialogue files.
 
 ## File guide
 * **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
