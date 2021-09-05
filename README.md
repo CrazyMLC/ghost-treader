@@ -8,7 +8,7 @@ There are hundreds of text files within the Ghost Trick ROM. Some of them are sc
 Basically, you can edit the dialogue in any way you like. You can even add or remove text boxes, change portraits, the works.
 
 ### Script files? Does that mean you can modify more than just the dialogue?
-Most of the filenames are in this format **##.xml.lz** where ## is a two letter language code.
+All of the dialogue files are in the format **##.xml.lz**, where ## is a two letter language code.
 But some of the filenames don't have any language code; they end with only **.xml.lz**. These files contain the scripting language for the game.
 
 Efforts have focused on the much easier task of understanding the dialogue files, but the script files aren't to far away from being understood as well.
