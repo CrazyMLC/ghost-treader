@@ -482,7 +482,9 @@ music = {
 	0x4: '4_minutes',
 	0x5: '4_minutes_variation',
 	0x6: 'count_down',
-	#0x7: 'unused_jingle',
+	
+	0x7: 'beta_jingle1',
+	
 	0x8: 'suspicion',
 	0x9: 'world_of_dead',
 	0xa: 'deadline',
@@ -513,18 +515,22 @@ music = {
 	0x23: 'epilogue',
 	0x24: 'providence_skip_intro',#?
 	0x25: 'intermission',
-	#0x26: 'unused_jingle2',
-	#0x27: 'beta_complication',
-	#0x28: 'beta_reincarnation',
-	#0x29: 'unused_theme',
-	#0x2a: 'unused_explore',#some kind of junkyard/invetigation theme maybe?
+	
+	0x26: 'beta_jingle2',
+	0x27: 'beta_countdown',
+	0x28: 'beta_lynne',
+	0x29: 'unused_theme',
+	0x2a: 'beta_suspicion',
+	
 	0x2b: 'missile_theme',
-	#0x2c: 'unused_peaceful',
-	#0x2d: 'beta_minister',
-	#0x2e: 'unused_fancy',
-	#0x2f: 'unused_jingle3',
-	#0x30: 'unused_reflection',
-	#0x31: 'beta_emma',
+	
+	0x2c: 'unused_peaceful',
+	0x2d: 'beta_minister',
+	0x2e: 'beta_salon',
+	0x2f: 'beta_jingle3',
+	0x30: 'unused_tifa',
+	0x31: 'beta_emma',
+	
 	0x32: 'jingle'
 }
 
