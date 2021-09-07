@@ -553,7 +553,7 @@ commands = {
 	0xff10: '[SHAKE {0} FOR {{0}}]',#time measured in frames?
 	
 	0xff15: '[CLEAR IN {0}]\n\n',#clears the textbox after some time. measured in frames?
-	0xff16: '[BREAK_NARRATOR]\n\n',#breaks up narrator text. softlocks when used in a text box.
+	0xff16: '[PARAGRAPH]\n\n',#breaks up narrator text. softlocks when used in a text box.
 	
 	0xff19: '[FADE_PORTRAIT {0} IN {{0}}]\n',#lower FADE is slower. no portrait barks?
 	
