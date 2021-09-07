@@ -1,9 +1,20 @@
 from io import BytesIO
 from struct import pack
-import sys,os,time
+import sys,os,time,argparse
 
 from tables import *
 from message import *
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description = "Encodes decoded 1LMG files back into 1LMG.")
+	parser.add_argument("-i", "--input", help="Input files or folder, output must be a folder for multiple files", nargs='*')
+	parser.add_argument("-o", "--output", help="Output file or folder", default=os.path.join(".","encoded",""))
+	parser.add_argument("-e", "--error", help="Error file")
+	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
+	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
+	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
+
+
 
 def encode_1LMG(loadpath, savepath):
 	"""Open, encode, and save a text file as a 1LMG file."""
@@ -12,7 +23,8 @@ def encode_1LMG(loadpath, savepath):
 	# First we have to clean off the '====' lines, and separate the list.
 	data = data.split('=\n')[1:]
 	if (len(data) % 2) != 0:
-		return "Mismatching number of labels and messages"
+		sys.stderr.write(f"Mismatching number of labels and messages: {loadpath}\n")
+		return -1
 	for i in range(len(data)):
 		line = data[i]
 		if line[-1] == "=":
@@ -23,7 +35,8 @@ def encode_1LMG(loadpath, savepath):
 		data[i] = data[i].split(" Position")[0]# Take out the position information, it's not relevant to encoding.
 		m = Message()
 		if data[i].count(' ') > 0:
-			return f'Label "{data[i][:20]}" contains a space'
+			sys.stderr.write(f'Label "{data[i][:20]}" contains a space: {loadpath}\n')
+			return -2
 		m.label = data[i]
 		m.decoded = data[i+1]
 		m.pointer = 0
@@ -48,8 +61,8 @@ def encode_1LMG(loadpath, savepath):
 		table.write( pack('<LL', labels.seek(0,2), data.seek(0,2) + 0x34) )
 		e = message.encode()
 		if type(e) is str:
-			print("\n"+e)
-			return "File had encoding error"
+			sys.stderr.write(f"File had encoding error: {loadpath}\n\t{e}\n")
+			return -3
 		data.write(e)
 		labels.write(message.label.encode() + bytes(1))
 	# Let's make sure that each sections is a multiple of 4 bytes.
@@ -69,44 +82,103 @@ def encode_1LMG(loadpath, savepath):
 			part.seek(0)
 			text_file.write(part.read())
 	
+	return 0
+	
 
-def printProgressBar (iteration, total):
-	"""Based on stack overflow 'Text Progress Bar in the Console [closed]'"""
-	percent = "{0:.1f}".format(100 * (iteration / float(total)))
-	filledLength = int(100 * iteration // total)
-	bar = '█' * filledLength + '-' * (100 - filledLength)
-	print(f'\r|{bar}| {percent}%', end = "\r")
-	if iteration == total: 
-		print()
-		
+#Now for the console interface.
 if __name__ == "__main__":
-	start = time.perf_counter()
-	output = "encoded"
-	if not os.path.isdir(output):
-		os.mkdir(output)
-	successful = 0
-	errors = ""
-	for v in range(1,len(sys.argv)):
-		printProgressBar(v-1,len(sys.argv)-1)
-		if sys.argv[v] == "--output":
-			if os.path.isdir(sys.argv[v+1]):
-				output = sys.argv[v+1]
-				continue
-			errors += f"Invalid output folder: {sys.argv[v+1]}\n"
-			break
-		elif os.path.isfile(sys.argv[v]):
-			new_file = os.path.basename(sys.argv[v])
-			new_file = new_file[:new_file.rfind('.')]
-			new_file = os.path.join(output,new_file)
-			e = encode_1LMG(sys.argv[v],new_file)
-			if e == None:
-				successful += 1
+	args = parser.parse_args()
+	
+	def print_progress (iteration, total):
+		"""Based on stack overflow 'Text Progress Bar in the Console [closed]'"""
+		percent = "{0:.1f}".format(100 * (iteration / float(total)))
+		filledLength = int(100 * iteration // total)
+		bar = '█' * filledLength + '-' * (100 - filledLength)
+		print(f'\r|{bar}| {percent}%', end = "\r")
+		if iteration == total: 
+			print()
+	
+	def end_program(message, help=False, wait=-1):
+		print(message)
+		if help:
+			parser.print_help()
+		if wait == -1:
+			input("Press enter to exit")
+		elif wait > 0:
+			time.sleep(wait)
+		quit()
+		
+	#Keep track of when the program started.
+	if not args.silent:
+		start = time.perf_counter()
+	
+	#First and foremost, let's see if we have any inputs so we can actually run.
+	if args.input == None:
+		if args.dragged == []:
+			if os.path.isdir("decoded"):
+				args.input = ["decoded"]
 			else:
-				errors += f"{e}: {os.path.basename(sys.argv[v])}\n"
-			continue
+				end_program("ERROR: No inputs, and decoded folder not found! Printing help text...", help=True)
 		else:
-			errors += f"Couldn't process command: {sys.argv[v]}\n"
-	printProgressBar(1,1)
-	print(errors)
-	print("Successfully encoded {0} file{1} in {2:.1f}ms".format(successful,("" if (successful==1) else "s"),(time.perf_counter()-start)*1000))
-	input("Press enter to exit")
+			args.input = args.dragged
+	#Let's keep track if there are multiple inputs, so we can throw an error if the output isn't a folder.
+	multiple = len(args.input) > 1
+	if not multiple and os.path.isdir(args.input[0]):
+		multiple = True
+	
+	#Now to check the output.
+	output_is_folder = False
+	if args.output[-1] == os.sep or os.path.isdir(args.output):
+		output_is_folder = True
+		if not os.path.exists(args.output):#If the output is a folder and doesn't exist, let's make it for the user.
+			try:
+				os.mkdir(args.output)
+			except:
+				end_program("ERROR: Couldn't create output folder.")
+	elif multiple:#If we have multiple inputs and the output isn't a folder, we should end execution.
+		end_program('ERROR: Input was multiple files, but the output was a single file.')
+	
+	#Let's set up error reporting for errors that won't stop execution...
+	if args.error != None:
+		try:
+			stderr_temp = sys.stderr
+			sys.stderr = open(args.error,'a')
+			sys.stderr.write(time.strftime(f'[%Y-%m-%d %H:%M:%S] {os.path.basename(__file__)}\n',time.localtime()))
+		except:
+			end_program(f"ERROR: Invalid error file.\n{args.error}")
+	
+	#Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders, which is why we have to do this.
+	inputs = []
+	for input in args.input:
+		if not os.path.exists(input):
+			end_program(f"ERROR: Input doesn't exist.\n{input}")
+		if not os.path.isdir(input):
+			inputs.append(input)
+		else:#Time to sort through the folder...
+			for root, dirs, files in os.walk(input, topdown=False):
+				for name in files:
+					inputs.append(os.path.join(root, name))
+	
+	#Good to go! Let's get through these files.
+	encoded_files = 0
+	for i in range(len(inputs)):
+		if not args.silent:
+			print_progress(1+i,len(inputs)+1)
+			
+		if output_is_folder:
+			filename = '.'.join(os.path.basename(inputs[i]).split('.')[:-1]) if inputs[i][-4:] == ".txt" else os.path.basename(inputs[i])
+			savepath = os.path.join(args.output,filename)
+		else:
+			savepath = args.output
+		
+		if encode_1LMG(inputs[i],savepath) >= 0:
+			encoded_files += 1
+
+	#Looks like we're done. Let's finish whatever outputs we have, and then exit.
+	if not args.silent:
+		print_progress(1,1)
+	sys.stderr.flush()
+	if args.error != None:
+		sys.stderr = stderr_temp
+	if not args.silent:
+		end_program("\nSuccessfully encoded {0} file{1} in {2:.1f}ms".format(encoded_files,("" if (encoded_files==1) else "s"),(time.perf_counter()-start)*1000), wait=(-1 if args.verbose else 5))
