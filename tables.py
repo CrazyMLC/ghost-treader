@@ -474,6 +474,15 @@ sounds = {
 	0x26: 'rat_hurt',
 	0x27: 'shaker',#idk what this is
 	#there are many, many sfx in this table, and very few are relevant to dialogue. maybe scripts use these?
+	
+	#here's some others used in dialogue:
+	0x33: 'missile_bark',#have to check, but it's with most of his dialogue
+	#0x37:
+	#0xaa:#chef?
+	#0x13e:#used by lovestruck officer?
+	#0x179:#beauty/dandy?
+	#0x193:#gunshot?
+	
 }
 
 music = {
@@ -540,35 +549,43 @@ commands = {
 	0xff01: '[BREAK]\n',#making this into a [] code, so that \n characters can be ignored by the encoder.
 	0xff02: '[WAIT]\n\n',#waits for input, then clears the textbox.
 	0xff03: '[CENTER]',#centers text printed afterwards, until a new line. produced undesirable results when used in the middle of a line.
-	0xff04: '[SPEED {0}]',#text speed, higher seems slower. frames per character?
-	0xff05: '[COLOR {0}]',#changes text color
+	0xff04: '[SPEED {}]',#text speed, higher seems slower. frames per character?
+	0xff05: '[COLOR {}]',#changes text color
 	0xff06: '[SHOW]',#shows the textbox
 	0xff07: '[HIDE]',#hides the textbox
-	0xff08: '[PORTRAIT {0}]\n',#portraits have different barks on appearing
+	0xff08: '[PORTRAIT {}]\n',#portraits have different barks on appearing
 	
-	0xff0c: '[PAUSE {0}]',#pauses text output. measured in frames?
-	0xff0d: '[SFX {0}]',#sound effects
-	
+	0xff0c: '[PAUSE {}]',#pauses text output. measured in frames?
+	0xff0d: '[SFX {}]',#sound effects
+	0xff0e: '[FUN0E {}]',#unknown. only used in police chief's office when rindge reports lynne's appearance at point X, with the value 134. maybe it's deprecated
 	0xff0f: '[FLASH]',#flashes the screen white
-	0xff10: '[SHAKE {0} FOR {{0}}]',#time measured in frames?
+	0xff10: '[SHAKE {} FOR {}]',#time measured in frames?
 	
-	0xff15: '[CLEAR IN {0}]\n\n',#clears the textbox after some time. measured in frames?
+	0xff15: '[CLEAR IN {}]\n\n',#clears the textbox after some time. measured in frames?
 	0xff16: '[PARAGRAPH]\n\n',#breaks up narrator text. softlocks when used in a text box.
+	0xff17: '[BIG]',#makes text after it big. put another one to make text size normal.
 	
-	0xff19: '[FADE_PORTRAIT {0} IN {{0}}]\n',#lower FADE is slower. no portrait barks?
+	0xff19: '[FADE_PORTRAIT {} IN {}]\n',#lower FADE is slower. no portrait barks?
 	
-	0xff1b: '[MINI_PORTRAIT {0}]\n',#mini portraits on the side of dialogue boxes
-	0xff1c: '[MUSIC {0}]',#changes music. could use another table.
+	0xff1b: '[MINI_PORTRAIT {}]\n',#mini portraits on the side of dialogue boxes
+	0xff1c: '[MUSIC {}]',#changes music. could use another table.
+	0xff1d: '[FUN1D {} {} {}]',#something to do with music? first one addresses the music table...
+	0xff1e: '[FUN1E {}]',#also musicy?
 	
-	0xff20: '[LOWER {0}]',#drops text down, more goes lower.
+	0xff20: '[LOWER {}]',#drops text down, more goes lower.
 	0xff21: '[SCRIPTED_PAUSE]',#pauses until a scripted condition is met. not available on all dialogue. does not clear the textbox.
-	0xff22: '[APPEAR {0}]',#affects fade in speed of narrator text. since it's used to accelerate fade in speed rather than slow it down, i'll just call it 'appear'. could use more testing, effects of the number may not be linear.
+	0xff22: '[APPEAR {}]',#affects fade in speed of narrator text. since it's used to accelerate fade in speed rather than slow it down, i'll just call it 'appear'. could use more testing, effects of the number may not be linear.
 	0xff23: '[SKIP]',#attempts to skip the remainder of the current textbox, doesn't allow waiting for input
-	0xff24: '[FADE {0}]',#fades text in all at once.
+	0xff24: '[FADE {}]',#fades text in all at once.
+	0xff25: '[SHAKE2 {}]',#what's the difference between this and 0xff10?
+	0xff27: '[SHAKE3 {} {}]',#what's with all these shakes???
+	0xff28: '[VOLUME {} {}]',#changes music volume
 	
-	0xff28: '[VOLUME {0}]',#changes music volume
-	
-	0xff2d: '[START Event {0}, Scene {{0}}]\n',#Event # seems to roughly correlate with story progress. Scene # seems to be sequential within each event, usually. some files contain scenes from multiple events... as of now, unsure how the game uses this information or if it even matters.
+	0xff2b: '[CONFIRM_SFX {}]',#changes the sound effect that plays when confirming the dialogue
+	0xff2c: '[BLACK {}]',#flashes white and then fades to black. higher number is slower. (number of frames?)
+	0xff2d: '[START Event {}, Scene {}]\n',#Event # seems to roughly correlate with story progress. Scene # seems to be sequential within each event, usually. some files contain scenes from multiple events... as of now, unsure how the game uses this information or if it even matters.
+	0xff2e: '[SHOUT {}]',#shouts a line of dialogue from an array?
+	0xff2f: '[RIGHT]',#right aligns text, distorts text if used in the middle of dialogue, just like center
 	
 	0xfffe: '[STOP]',#waits for input, then ends a scene
 }

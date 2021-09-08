@@ -64,32 +64,40 @@ class Message:
 		while i < self.length>>1:
 			char, = unpack('<H', data.read(2))
 			if char in commands:
-				command = commands[char]
+				command = commands[char].split(' ')
+				
+				# let's count our number of parameters for this function.
+				parameters = []
+				for j in range(len(command)):
+					if '{}' in command[j]:
+						parameters.append(j)
 				# if getting parameters would go out of bounds, don't do it.
-				if i+command.count('{0') >= self.length>>1:
+				if i+len(parameters) >= self.length>>1:
 					self.decoded += text_table.setdefault(char, byte_string['outside'].format(char))
 					i+=1
 					continue
 				# okay, time to fetch parameters.
-				parameters = []
-				for j in range(command.count('{0')):
+				for j in range(len(parameters)):
 					i+=1
-					parameters.append(unpack('<H', data.read(2))[0])
+					parameters[j] = (unpack('<H', data.read(2))[0], parameters[j])
 				# if we got any params, time to start inserting them. check tables for replacing numbers with strings.
-				for param in parameters:
-					p = param
-					if command.count('COLOR {'):
-						p = colors.setdefault(param, byte_string['inside'].format(param))
-					elif command.count('MINI_PORTRAIT {'):
-						p = mini_portraits.setdefault(param, byte_string['inside'].format(param))
-					elif command.count('PORTRAIT {'):
-						p = portraits.setdefault(param, byte_string['inside'].format(param))
-					elif command.count('SFX {'):
-						p = sounds.setdefault(param, byte_string['inside'].format(param))
-					elif command.count('MUSIC {'):
-						p = music.setdefault(param, byte_string['inside'].format(param))
-					command = command.format(p)
-				self.decoded += command
+				for j in range(len(parameters)):
+					param = parameters[j][0]#This is the actual parameter
+					ind = parameters[j][1]#This is the index within the command the parameter is for
+					if j == 0:
+						if command[0] == '[COLOR':
+							param = colors.setdefault(param, byte_string['inside'].format(param))
+						elif command[0] == '[MINI_PORTRAIT':
+							param = mini_portraits.setdefault(param, byte_string['inside'].format(param))
+						elif command[0] in ['[PORTRAIT','[FADE_PORTRAIT']:
+							param = portraits.setdefault(param, byte_string['inside'].format(param))
+						elif command[0] in ['[SFX','[CONFIRM_SFX']:
+							param = sounds.setdefault(param, byte_string['inside'].format(param))
+						elif command[0] in ['[MUSIC','[FADE_MUSIC']:
+							param = music.setdefault(param, byte_string['inside'].format(param))
+					command[ind] = command[ind].format(param)
+				# great, the command should be ready to go.
+				self.decoded += ' '.join(command)
 			elif char in images:
 				self.decoded += images.setdefault(char, byte_string['inside'].format(char))
 			else:
@@ -131,7 +139,7 @@ class Message:
 					command = encode_commands[tag[0]]
 					params = [command[0]]
 					for z in range(1,len(command)):# If the same spot in the original command string is a variable, let's extract it.
-						if command[z][0] == '{':
+						if '{}' in command[z]:
 							params.append(tag[z])
 					# Now the arduous process of converting the strings into numbers.
 					for v in range(len(params)):
@@ -146,30 +154,31 @@ class Message:
 							if param[-1] in [',',':',';']:
 								param = param[:-1]
 							params[v] = int(param,16)
-						elif tag[0] == "COLOR":
-							for key,value in colors.items():
-								if param == value:
-									params[v] = key
-									break
-						elif tag[0] == "MINI_PORTRAIT":
-							for key,value in mini_portraits.items():
-								if param == value:
-									params[v] = key
-									break
-						elif tag[0] == "PORTRAIT":
-							params[v] = encode_portraits[param]
-						elif tag[0] == "FADE_PORTRAIT" and v == 1:
-							params[v] = encode_portraits[param]
-						elif tag[0] == "SFX":
-							for key,value in sounds.items():
-								if param == value:
-									params[v] = key
-									break
-						elif tag[0] == "MUSIC":
-							for key,value in music.items():
-								if param == value:
-									params[v] = key
-									break
+						elif v == 1:
+							if tag[0] == "COLOR":
+								for key,value in colors.items():
+									if param == value:
+										params[v] = key
+										break
+							elif tag[0] == "MINI_PORTRAIT":
+								for key,value in mini_portraits.items():
+									if param == value:
+										params[v] = key
+										break
+							elif tag[0] in ["PORTRAIT","FADE_PORTRAIT"]:
+								params[v] = encode_portraits[param]
+							elif tag[0] in ["SFX","CONFIRM_SFX"]:
+								for key,value in sounds.items():
+									if param == value:
+										params[v] = key
+										break
+							elif tag[0] in ["MUSIC","FADE_MUSIC"]:
+								for key,value in music.items():
+									if param == value:
+										params[v] = key
+										break
+							else:
+								return f"Unknown {tag[0]} input in {self.label}: [{param}]"
 						else:
 							return f"Unknown {tag[0]} input in {self.label}: [{param}]"
 					encoded.write( pack('<'+'H'*len(params),*params) ) 
