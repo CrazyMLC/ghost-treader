@@ -164,7 +164,7 @@ if __name__ == "__main__":
 		else:#Time to sort through the folder...
 			for root, dirs, files in os.walk(input, topdown=False):
 				for name in files:
-					inputs.append(os.path.join(root, name))
+					print(inputs.append(os.path.join(root, name)))
 	
 	#Good to go! Let's get through these files.
 	decoded_files = 0
