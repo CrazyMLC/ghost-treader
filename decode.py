@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from io import BytesIO
 from struct import unpack
 import sys,os,time,argparse
