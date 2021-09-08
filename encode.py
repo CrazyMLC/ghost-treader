@@ -162,6 +162,8 @@ if __name__ == "__main__":
 				for name in files:
 					if args.wildcard != None:#Check out this lazy wildcard implementation.
 						fname = os.path.basename(name)
+						if not fname.endswith(wildcard[-1]):
+							continue
 						for wild in wildcard:
 							if wild not in fname:
 								fname = None#Just an easy way to save the failure...
