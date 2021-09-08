@@ -545,8 +545,54 @@ music = {
 	0x32: 'jingle'
 }
 
+#currently unused by encoder/decoder, just documenting them here
+shouts = {
+	0x0: 'heeey',
+	0x1: 'miss_kamila',
+	0x2: 'cant_believe',
+	0x3: 'ha_ha_ha',
+	0x4: 'it_cant_be',
+	0x5: 'dont_listen',
+	0x6: 'welcome',
+	0x7: 'hate_red_things',
+	0x8: 'who_am_i',
+	0x9: 'we_did_it',
+	0xa: 'didnt_we',
+	0xb: 'ill_never_forget_it',
+	0xc: 'ill_never_forget_you',
+	0xd: 'we_have_to',
+	0xe: 'not_fair',
+	0xf: 'missile',
+	0x10: 'im_missile',
+	0x11: 'its_missile',
+	0x12: 'ill_try',
+	0x13: 'amelie',
+	0x14: 'is_that_you',
+	0x15: 'blank?_nooo',
+	0x16: 'cant_read',
+	0x17: 'who_shot_me',
+	0x18: 'you_bet_i_did',
+	0x19: 'im_very_sorry',
+	0x1a: 'of_course',
+	0x1b: 'of_course_we_will',
+	0x1c: 'naturally',
+	0x1d: 'from_terrible_tree',
+	0x1e: 'you_bet',
+	0x1f: 'you_got_it',
+	0x20: 'over_and_over',
+	0x21: 'ill_do_it',
+	0x22: 'sissel',
+	0x23: 'got_it',
+	0x24: 'wow',
+	0x25: 'hello?',
+	0x26: 'miss_lynne',
+	0x27: 'i_hope',
+	#0x28: 'blank',
+	#the table loops after this? shouldn't be exactly the same though, judging off where it's used. most shouts in the game tend to be 40-80? and they don't match up with just looping this over and over as is
+}
+
 commands = {
-	0xff01: '[BREAK]\n',#making this into a [] code, so that \n characters can be ignored by the encoder.
+	0xff01: '[BREAK]\n',#moves to a new line
 	0xff02: '[WAIT]\n\n',#waits for input, then clears the textbox.
 	0xff03: '[CENTER]',#centers text printed afterwards, until a new line. produced undesirable results when used in the middle of a line.
 	0xff04: '[SPEED {}]',#text speed, higher seems slower. frames per character?
@@ -557,7 +603,7 @@ commands = {
 	
 	0xff0c: '[PAUSE {}]',#pauses text output. measured in frames?
 	0xff0d: '[SFX {}]',#sound effects
-	0xff0e: '[FUN0E {}]',#unknown. only used in police chief's office when rindge reports lynne's appearance at point X, with the value 134. maybe it's deprecated
+	0xff0e: '[FUN_0E {}]',#unknown. only used in police chief's office when rindge reports lynne's appearance at point X, with the value 0x86, and seems to have no effect. maybe it's deprecated
 	0xff0f: '[FLASH]',#flashes the screen white
 	0xff10: '[SHAKE {} FOR {}]',#time measured in frames?
 	
@@ -568,9 +614,9 @@ commands = {
 	0xff19: '[FADE_PORTRAIT {} IN {}]\n',#lower FADE is slower. no portrait barks?
 	
 	0xff1b: '[MINI_PORTRAIT {}]\n',#mini portraits on the side of dialogue boxes
-	0xff1c: '[MUSIC {}]',#changes music. could use another table.
-	0xff1d: '[FUN1D {} {} {}]',#something to do with music? first one addresses the music table...
-	0xff1e: '[FUN1E {}]',#also musicy?
+	0xff1c: '[MUSIC {}]',#changes music track.
+	0xff1d: '[FADE_MUSIC {} TO {} IN {}]',#fades a bgm track to the given volume, over the given time. (frames again?)
+	0xff1e: '[MUSIC_OFF {}]',#fades music out over the given time (frames again?)
 	
 	0xff20: '[LOWER {}]',#drops text down, more goes lower.
 	0xff21: '[SCRIPTED_PAUSE]',#pauses until a scripted condition is met. not available on all dialogue. does not clear the textbox.
@@ -579,12 +625,12 @@ commands = {
 	0xff24: '[FADE {}]',#fades text in all at once.
 	0xff25: '[SHAKE2 {}]',#what's the difference between this and 0xff10?
 	0xff27: '[SHAKE3 {} {}]',#what's with all these shakes???
-	0xff28: '[VOLUME {} {}]',#changes music volume
+	0xff28: '[VOLUME {} {}]',#changes music volume (X volume in Y frames?)
 	
 	0xff2b: '[CONFIRM_SFX {}]',#changes the sound effect that plays when confirming the dialogue
-	0xff2c: '[BLACK {}]',#flashes white and then fades to black. higher number is slower. (number of frames?)
+	0xff2c: '[FOCUS {}]',#flashes background white and then fades to black. higher number is slower. (number of frames?)
 	0xff2d: '[START Event {}, Scene {}]\n',#Event # seems to roughly correlate with story progress. Scene # seems to be sequential within each event, usually. some files contain scenes from multiple events... as of now, unsure how the game uses this information or if it even matters.
-	0xff2e: '[SHOUT {}]',#shouts a line of dialogue from an array?
+	0xff2e: '[SHOUT {}]',#fills the text box with an image, showing a message in a large font. unsure why it's sometimes accompanied by normal text and other tags. needs another table...
 	0xff2f: '[RIGHT]',#right aligns text, distorts text if used in the middle of dialogue, just like center
 	
 	0xfffe: '[STOP]',#waits for input, then ends a scene
@@ -607,5 +653,5 @@ stages = {#where is the park???? where is yomiel's death puzzle??
 
 byte_string = {
 	'outside': '[0x{0:04x}]',
-	'inside': '0x{0:04x}'
+	'inside': '0x{0:x}'
 }
