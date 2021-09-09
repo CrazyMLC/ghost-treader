@@ -1,6 +1,6 @@
 from io import BytesIO
 from struct import unpack
-import sys,os,time,argparse
+import sys,os,time,argparse,glob
 
 from tables import *
 from message import *
@@ -10,7 +10,7 @@ if __name__ == "__main__":
 	parser.add_argument("-i", "--input", help="Input files or folder, output must be a folder for multiple files", nargs='*')
 	parser.add_argument("-o", "--output", help="Output file or folder", default=os.path.join(".","decoded",""))
 	parser.add_argument("-e", "--error", help="Error file")
-	parser.add_argument("-w", "--wildcard", help="Filters folder contents. separate mandatory name sections with *")
+	parser.add_argument("-w", "--wildcard", help="Filters folder contents. using glob library", default="*")
 	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
 	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
 	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
@@ -162,21 +162,11 @@ if __name__ == "__main__":
 		if not os.path.isdir(input):
 			inputs.append(input)
 		else:#Time to sort through the folder...
-			if args.wildcard != None:
-				wildcard = args.wildcard.split('*')
+			temp = set()
 			for root, dirs, files in os.walk(input, topdown=False):
-				for name in files:
-					if args.wildcard != None:#Check out this lazy wildcard implementation.
-						fname = os.path.basename(name)
-						if not fname.endswith(wildcard[-1]):
-							continue
-						for wild in wildcard:
-							if wild not in fname:
-								fname = None#Just an easy way to save the failure...
-								break
-						if fname == None:#If we failed the wildcard test, on to the next filename.
-							continue
-					inputs.append(os.path.join(root, name))
+				for dir in dirs:
+					temp.update(glob.glob(os.path.join(root,dir,args.wildcard)))
+			inputs += temp
 	
 	#Good to go! Let's get through these files.
 	decoded_files = 0
