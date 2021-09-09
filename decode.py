@@ -163,7 +163,7 @@ if __name__ == "__main__":
 			inputs.append(input)
 		else:#Time to sort through the folder...
 			temp = set()
-			for root, dirs, files in os.walk(input, topdown=False):
+			for root, dirs, files in os.walk(input):
 				for dir in dirs:
 					temp.update(glob.glob(os.path.join(root,dir,args.wildcard)))
 			inputs += temp
