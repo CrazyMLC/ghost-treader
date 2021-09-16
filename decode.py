@@ -1,6 +1,6 @@
 from io import BytesIO
 from struct import unpack
-import sys,os,time,argparse,glob
+import sys,os,time,argparse,fnmatch
 
 from tables import *
 from message import *
@@ -10,7 +10,7 @@ if __name__ == "__main__":
 	parser.add_argument("-i", "--input", help="Input files or folder, output must be a folder for multiple files", nargs='*')
 	parser.add_argument("-o", "--output", help="Output file or folder", default=os.path.join(".","decoded",""))
 	parser.add_argument("-e", "--error", help="Error file")
-	parser.add_argument("-w", "--wildcard", help="Filters folder contents. using glob library", default="*")
+	parser.add_argument("-w", "--wildcard", help="Filters folder contents using fnmatch")
 	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
 	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
 	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
@@ -162,11 +162,14 @@ if __name__ == "__main__":
 		if not os.path.isdir(input):
 			inputs.append(input)
 		else:#Time to sort through the folder...
-			temp = set()
-			for root, dirs, files in os.walk(input):
-				for dir in dirs:
-					temp.update(glob.glob(os.path.join(root,dir,args.wildcard)))
-			inputs += temp
+			for root, dirs, files in os.walk(input, topdown=False):
+				for name in files:
+					if args.wildcard != None:
+						if not fnmatch.fnmatch(os.path.basename(name), args.wildcard):
+							continue
+					inputs.append(os.path.join(root, name))
+	#Get rid of any duplicate filepaths in the list, just in case...
+	inputs = list(dict.fromkeys(inputs))
 	
 	#Good to go! Let's get through these files.
 	decoded_files = 0
