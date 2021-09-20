@@ -1,7 +1,7 @@
 from io import BytesIO
 from struct import pack,unpack
 
-from tables import *
+from lib.tables import *
 
 # For encoding, we're gonna want to make some custom tables based on the ones in tables.py, and we don't want to have to redo it every time we encode a new file.
 encode_tags = None# We'll have a quick, easy to search list of commands/other []s that don't have any parameters.

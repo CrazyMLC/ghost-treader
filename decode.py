@@ -2,8 +2,8 @@ from io import BytesIO
 from struct import unpack
 import sys,os,time,argparse,fnmatch
 
-from tables import *
-from message import *
+from lib.tables import *
+from lib.message import *
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = "Decodes 1LMG files into plaintext.")

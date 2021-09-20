@@ -284,7 +284,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0x79: 'Missile_empty',
 	0x7a: 'Missile_old_empty',
 	
-	0x7b: 'Jeego2',
+	0x7b: 'Jeego2',#Why two Jeegos?
 	0x7d: 'Jeego_empty',
 	
 	0x7e: 'Tengo',
@@ -326,7 +326,7 @@ portraits = {# Every portrait has a flipped version, except the 'empty' potraits
 	0xbc: 'Jowd_empty',
 	
 	0xbd: 'Officer_serious',
-	0xbf: 'Officer_serious2',#?
+	0xbf: 'Officer_serious2',#? Maybe one of these is just a normal officer, and the other is the one that has a crush on Lynne
 	0xc1: 'Officer_devastated',
 	0xc3: 'Officer_empty',
 	
