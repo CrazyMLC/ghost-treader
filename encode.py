@@ -1,6 +1,6 @@
 from io import BytesIO
 from struct import pack
-import sys,os,time,argparse,glob
+import sys,os,time,argparse,fnmatch
 
 from tables import *
 from message import *
