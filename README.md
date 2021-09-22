@@ -23,9 +23,10 @@ For now however, **ghost-treader** only works with dialogue files.
 * **CREDITS** - The people this project wouldn't have gotten this far without.
 
 ## To-do list
-1. Remove the need for Tinke.
-2. Discover the rest of the functions used in dialogue.
-3. Figure out the scripting language.
+1. Automatically detect compressed 1LMG files, and decompress/compress them as needed.
+1. Remove the need for Tinke entirely.
+2. Discover the difference between the different functions that shake the screen.
+3. Decode the scripting language.
 
 ## How to use (Windows)
 1. First, you're going to need some resources.
