@@ -18,6 +18,7 @@ For now however, **ghost-treader** only works with dialogue files.
 * **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
 * **encode.py** - Encodes your decoded text files back into a format Ghost Trick can use. Just like decode.py, just drag a decoded file in and check .\encoded\\. (You can also run encode.py to autmatically encode any files in the decoded folder)
 * **lib\tables.py** - The byte-to-text dictionary. It also doubles as a guide, since it lists every command. If you start seeing hex numbers in your text, you can try contributing to this file.
+* **lib\readme.txt** - Explains the contents of the lib folder.
 * **notes.txt** - Some of my personal notes on decoding the 1LMG file format and byte commands.
 * **CREDITS** - The people this project wouldn't have gotten this far without.
 
