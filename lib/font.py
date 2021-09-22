@@ -1,7 +1,7 @@
 from PIL import Image
 import os,sys
 """
-palette = [# colors extracted from editing balloon_font_en.imb, but doesn't seem to match font_db.imb
+balloon_palette = [# colors extracted from editing balloon_font_en.imb and viewing the "So long, sister." in chp1
 	(247,247,247),#	0	0000
 	(178,178,178),#	1	0001
 	(146,146,146),#	2	0010
@@ -19,8 +19,28 @@ palette = [# colors extracted from editing balloon_font_en.imb, but doesn't seem
 	(0,89,0),#		e	1110
 	(0,154,0)#		f	1111
 ]
+db_palette = [# colors extracted from editing font_db.imb and observing the People/Phone Book
+	(12,0,0),#		0	0000
+	(12,0,0),#		1	0001
+	(48,0,0),#		2	0010
+	(65,0,0),#		3	0011
+	(73,4,4),#		4	0100
+	(121,4,4),#		5	0101
+	(162,4,0),#		6	0110
+	(48,12,0),#		7	0111
+	(81,32,0),#		8	1000
+	(105,40,0),#	9	1001
+	(121,56,0),#	a	1010
+	(138,65,0),#	b	1011
+	(170,73,0),#	c	1100
+	(195,97,0),#	d	1101
+	(211,105,0),#	e	1110
+	(255,130,0)#		f	1111
+]
 """
-palette = [0xf7,0xb2,0x92,0,0,0,0,0xf7,0xe7,0xd2,0xc2,0xa2,0x92,0x62,0x42,0]#made this up
+palette = [0xf7,0xb2,0x92,0,0xff,0xff,0x1,0xf7,0xd7,0xc2,0xb2,0x92,0x72,0x52,0x32,0]#made this up
+palette2 = [0xff,0xcb,0x79,0]# color picked from dialogue box
+
 
 def read_font(p):
 	"""Takes a font .imb file and outputs images of each character."""
@@ -37,27 +57,70 @@ def read_font(p):
 		os.mkdir("font")
 	if not os.path.exists(output):
 		os.mkdir(output)
-	# Find out the number of characters. (maybe the number is always 256, and it changes the height to match?)
+	
+	# Now we have to figure out if we should run the 2bpp version or the 4bpp version.
+	# This is a difficult problem, so let's just trust the filename.
+	if "2bpp" in os.path.basename(p):
+		font_2bpp(output,data)
+	else:
+		font_4bpp(output,data)
+	
+	print("Success.")
+
+
+def font_4bpp(output,data):
+	# Find out the number of characters.
 	chars = int(len(data)/128)
-	# Now read the characters and save the images. Pillow makes this very simple.
+	
 	for i in range(chars):
-		#This bytearray will hold the image data for us until we pass it to PIL.
+		# This bytearray will hold the image data for us until we pass it to PIL.
 		char_img = bytearray()
+		
 		for k in range(128):
 			byte = data[i*128 + k]
 			# It reads the nibbles in little endian format...
 			char_img.append(palette[byte&15])# First the right nibble
 			char_img.append(palette[byte>>4])# Then the left nibble
-		fname = os.path.join(output,f"{i}.png")
 		
+		fname = os.path.join(output,f"{i}.png")
 		# Now we let PIL make and save the image for us.
 		img = Image.frombytes('L',(16,16),bytes(char_img))
 		img.save(fname)
-	print("Success.")
+
+
+def font_2bpp(output,data):
+	# Find out the number of characters.
+	chars = int(len(data)/96)
+	
+	for i in range(chars):
+		# This bytearray will hold the image data for us until we pass it to PIL.
+		char_img = bytearray()
+		
+		for k in range(96):
+			byte = data[i*96 + k]
+			# This is 2bpp, so there are four pixels in a byte. Apparently a term for 2 bits is a "crumb"
+			crumbs = [(byte>>4)&3, byte>>6, byte&3, (byte>>2)&3]
+			# So basically, if we visualize the order that each crumb in the byte is rendered...
+			# 0b00000000
+			#   B A D C
+			# Why is it ordered this way??? ...Okay, fine. Whatever. It's not like it was frustrating or anything, no sir.
+			
+			# At least now we can write them to the byte array.
+			for crumb in crumbs:
+				char_img.append(palette2[crumb])
+		
+		fname = os.path.join(output,f"{i}.png")
+		# Now we let PIL make and save the image for us.
+		img = Image.frombytes('L',(16,24),bytes(char_img))
+		img.save(fname)
+
 
 if __name__ == "__main__":
 	for p in sys.argv[1:]:
 		print(p)
-		read_font(p)
+		try:
+			read_font(p)
+		except:
+			print("Encountered an error while reading the file.")
 		
 	input("Press enter to exit")
