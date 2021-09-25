@@ -1,6 +1,8 @@
 # ghost-treader
 A specialized version of [ghost-tripper](https://github.com/CatTrinket/ghost-tripper) meant to deal with the text files of Capcom's DS release, *Ghost Trick: Phantom Detective*. 
 
+The project is limited to standard libraries for the sake of compatability, besides using PIL for images.
+
 ## Text files?
 There are hundreds of text files within the Ghost Trick ROM. Some of them are script files, but the majority are dialogue files.
 
@@ -8,11 +10,9 @@ There are hundreds of text files within the Ghost Trick ROM. Some of them are sc
 Basically, you can edit the dialogue in any way you like. You can even add or remove text boxes, change portraits, the works.
 
 ### Script files? Does that mean you can modify more than just the dialogue?
-All of the dialogue files are in the format **##.xml.lz**, where ## is a two letter language code.
-But some of the filenames don't have any language code; they end with only **.xml.lz**. These files contain the scripting language for the game.
-
-Efforts have focused on the much easier task of understanding the dialogue files, but the script files could be understood as well, with a bit of work.
-For now however, **ghost-treader** only works with dialogue files.
+All of the dialogue files are in the format **.##.xml.lz**, where ## is a two letter language code.
+But some of the filenames don't have any language code; they end with only **.xml.lz**. These files contain the scripting language for the game, which appears to control every aspect of gameplay.
+For now, **ghost-treader** only works with dialogue files. But that could change in the future.
 
 ## File guide
 * **decode.py** - This handles the job of decoding Ghost Trick's text files. Drag one into the script and it'll show up in the .\decoded\ folder.
@@ -24,9 +24,10 @@ For now however, **ghost-treader** only works with dialogue files.
 
 ## To-do list
 1. Automatically detect compressed 1LMG files, and decompress/compress them as needed.
-1. Remove the need for Tinke entirely.
-2. Discover the difference between the different functions that shake the screen.
-3. Decode the scripting language.
+2. Remove the need for Tinke entirely.
+3. Discover the difference between the different functions that shake the screen.
+4. Decode the scripting language.
+5. Expand back into handling images.
 
 ## How to use (Windows)
 1. First, you're going to need some resources.
