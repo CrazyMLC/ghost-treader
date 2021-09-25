@@ -1,9 +1,13 @@
-compress.py - from magical, encodes files. unused, as of this writing.
-lzss3.py - also from magical, decodes files. also unused as of writing.
+Unlike decode.py and encode.py, the scripts in this folder are not intended to be user-facing.
+Comparatively, their interfaces are either limited or nonexistant.
+======================================================
 
-font.py - creates images out of .imb files. puts it all into a .\font\ folder.
+compress.py - From magical, encodes files. Unused, as of this writing.
+lzss3.py - Also from magical, decodes files. Also unused as of writing.
 
-message.py - does the job of converting bytes into text, and text into bytes, using tables.py
-tables.py - has information on what each byte in 1LMG files mean.
+font.py - Creates images out of .imb files. puts it all into a .\font\ folder. May be used in the future to create a text previewer.
 
-__init__.py - allows scripts in this folder to be accessed externally
+message.py - Describes the Message class, which does the job of converting bytes into text, and text into bytes, using tables.py.
+tables.py - The Byte-to-Text dictionary for Ghost Trick's 1LMG files.
+
+__init__.py - Allows scripts in this folder to be accessed externally.
