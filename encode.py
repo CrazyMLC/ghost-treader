@@ -4,6 +4,7 @@ import sys,os,time,argparse,fnmatch
 
 from lib.tables import *
 from lib.message import *
+from lib.lz11 import *
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = "Encodes decoded 1LMG files back into 1LMG.")
@@ -11,14 +12,19 @@ if __name__ == "__main__":
 	parser.add_argument("-o", "--output", help="Output file or folder", default=os.path.join(".","encoded",""))
 	parser.add_argument("-e", "--error", help="Error file")
 	parser.add_argument("-w", "--wildcard", help="Filters folder contents using fnmatch")
+	parser.add_argument("-c", "--compress", help="Controls compression. 1 is never, 2 reads the filename, 3 always compresses.", action='count', default=2)
+	#parser.add_argument("-f", "--flags", help="Passed to the compression function. Check .\lib\source\lz11.h for details.", default=7)
 	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
 	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
 	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
+	
+	lz11_init("lib")
 
 
 
-def encode_1LMG(loadpath, savepath):
-	"""Open, encode, and save a text file as a 1LMG file."""
+def encode_1LMG(loadpath, savepath, compress=2, flags=0):
+	"""Open, encode, and save a text file as a 1LMG file.
+	Takes a file path to load from, a filepath to save to, and an optional compression parameter."""
 	with open(loadpath, 'r', encoding="utf-8") as text_file:
 		data = text_file.read()
 	# First we have to clean off the '====' lines, and separate the list.
@@ -35,9 +41,9 @@ def encode_1LMG(loadpath, savepath):
 	for i in range(0,len(data),2):
 		data[i] = data[i].split(" Position")[0]# Take out the position information, it's not relevant to encoding.
 		m = Message()
-		if data[i].count(' ') > 0:
-			sys.stderr.write(f'Label "{data[i][:20]}" contains a space: {loadpath}\n')
-			return -2
+		#if data[i].count(' ') > 0:
+		#	sys.stderr.write(f'Label "{data[i][:20]}" contains a space: {loadpath}\n')
+		#	return -2
 		m.label = data[i]
 		m.decoded = data[i+1]
 		m.pointer = 0
@@ -78,10 +84,17 @@ def encode_1LMG(loadpath, savepath):
 	header.write( pack('<LLL', data.seek(0,2), strings.seek(0,2), table.seek(0,2)+labels.seek(0,2)) )
 	header.write(bytes(0x20))
 	# Well, that was easy. Time to save the file.
-	with open(savepath, 'wb') as text_file:
-		for part in [header,data,strings,table,labels]:
-			part.seek(0)
-			text_file.write(part.read())
+	for part in [data,strings,table,labels]:
+		part.seek(0)
+		header.write(part.read())
+		part = None
+	
+	header.seek(0)
+	with open(savepath, 'wb') as file:
+		if (savepath[-3:] == ".lz" and compress == 2) or compress == 3:
+			file.write(lz11_compress(header.read(),flags))
+		else:
+			file.write(header.read())
 	
 	return 0
 	
@@ -150,13 +163,13 @@ if __name__ == "__main__":
 	
 	#Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders, which is why we have to do this.
 	inputs = []
-	for input in args.input:
-		if not os.path.exists(input):
-			end_program(f"ERROR: Input doesn't exist.\n{input}")
-		if not os.path.isdir(input):
-			inputs.append(input)
+	for path in args.input:
+		if not os.path.exists(path):
+			end_program(f"ERROR: Input doesn't exist.\n{path}")
+		if not os.path.isdir(path):
+			inputs.append(path)
 		else:#Time to sort through the folder...
-			for root, dirs, files in os.walk(input, topdown=False):
+			for root, dirs, files in os.walk(path):
 				for name in files:
 					if args.wildcard != None:
 						if not fnmatch.fnmatch(os.path.basename(name), args.wildcard):
@@ -173,11 +186,11 @@ if __name__ == "__main__":
 			
 		if output_is_folder:
 			filename = '.'.join(os.path.basename(inputs[i]).split('.')[:-1]) if inputs[i][-4:] == ".txt" else os.path.basename(inputs[i])
-			savepath = os.path.join(args.output,filename)
+			savepath = os.path.join(args.output, filename)
 		else:
 			savepath = args.output
 		
-		if encode_1LMG(inputs[i],savepath) >= 0:
+		if encode_1LMG(inputs[i], savepath, args.compress) >= 0:
 			encoded_files += 1
 
 	#Looks like we're done. Let's finish whatever outputs we have, and then exit.

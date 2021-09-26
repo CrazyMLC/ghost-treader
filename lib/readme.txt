@@ -2,8 +2,8 @@ Unlike decode.py and encode.py, the scripts in this folder are not intended to b
 Comparatively, their interfaces are either limited or nonexistant.
 ======================================================
 
-compress.py - From magical, encodes files. Unused, as of this writing.
-lzss3.py - Also from magical, decodes files. Also unused as of writing.
+lz11.co - Slightly modified version of unknownbrackets' lz77 compression.
+lz11.py - A wrapper for lz11.co to make it easier to use.
 
 font.py - Creates images out of .imb files. puts it all into a .\font\ folder. May be used in the future to create a text previewer.
 

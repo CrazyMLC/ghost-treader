@@ -4,6 +4,7 @@ import sys,os,time,argparse,fnmatch
 
 from lib.tables import *
 from lib.message import *
+from lib.lz11 import *
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description = "Decodes 1LMG files into plaintext.")
@@ -14,19 +15,26 @@ if __name__ == "__main__":
 	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
 	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
 	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
+	
+	lz11_init("lib")
 
 
 
 def decode_1LMG(loadpath,savepath=None):
 	"""Open and decode a 1LMG file at the given filepath and print it, or save it if given a savepath."""
-	with open(loadpath, 'rb') as text_file:
-		data = text_file.read()
-	data = BytesIO(data)
+	with open(loadpath, 'rb') as file:
+		data = file.read()
+		
+	# Time to check if it's a valid file, or decompress it if it's still compressed.
+	if data[:4] != b'1LMG':
+		if data[5:9] == b'1LMG':
+			data = lz11_decompress(data)
+		else:
+			sys.stderr.write(f"File isn't 1LMG format: {loadpath}\n")
+			return -1
 	
-	if data.read(4) != b'1LMG':
-		sys.stderr.write(f"File isn't 1LMG format: {loadpath}\n")
-		return -1
-
+	data = BytesIO(data)
+	data.seek(4)
 	# Let's find all the important file locations
 	mystery, = unpack('<L', data.read(4))# Seems to have something to do with scripts...
 	data_length, = unpack('<L', data.read(4))
@@ -156,13 +164,13 @@ if __name__ == "__main__":
 	
 	#Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders, which is why we have to do this.
 	inputs = []
-	for input in args.input:
-		if not os.path.exists(input):
-			end_program(f"ERROR: Input doesn't exist.\n{input}")
-		if not os.path.isdir(input):
-			inputs.append(input)
+	for path in args.input:
+		if not os.path.exists(path):
+			end_program(f"ERROR: Input doesn't exist.\n{path}")
+		if not os.path.isdir(path):
+			inputs.append(path)
 		else:#Time to sort through the folder...
-			for root, dirs, files in os.walk(input, topdown=False):
+			for root, dirs, files in os.walk(path):
 				for name in files:
 					if args.wildcard != None:
 						if not fnmatch.fnmatch(os.path.basename(name), args.wildcard):
@@ -182,8 +190,11 @@ if __name__ == "__main__":
 		else:
 			savepath = args.output
 		
+		#print(inputs[i], " decoding...")
 		if decode_1LMG(inputs[i],savepath) >= 0:
 			decoded_files += 1
+		#print(inputs[i], " decoded")
+
 
 	#Looks like we're done. Let's finish whatever outputs we have, and then exit.
 	if not args.silent:
