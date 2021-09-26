@@ -6,7 +6,7 @@ SOURCES="lz11.cpp"
 all: lz11.so
 
 lz11.so: lz11.cpp lz11.h
-	${GCC} ${CXXFLAGS} -o ${OUT} ${SOURCES}
+	${CC} ${CXXFLAGS} -o ${OUT} ${SOURCES}
 	cp ${OUT} ..
 
 clean:
