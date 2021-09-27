@@ -40,11 +40,11 @@ For now, **ghost-treader** only works with dialogue files. But that could change
    1. Drag your extracted **.en.xml.lz** file into this project's **decode.py**.
    1. Check the "decoded" subfolder, and open the .txt file in your text editor of choice.
    1. Make some changes! Make someone say something funny, and it'll be easy to notice.
-   1. You can look at **.\lib\tables.py** to find more information on the various commands that have been discovered.
+   1. You can look at **lib\tables.py** to find more information on the various commands that have been discovered.
 1. Now to encode the text file back into a 1LMG file.
    1. Drag the text file into this project's **encode.py**.
    1. Check the "encoded" subfolder. If there weren't any errors, your file should be good to go to be reinserted with tinke.
-1. Time to insert the file back into Ghost Trick.
+1. Time to insert the file back into Ghost Trick with tinke.
    1. Navigate back to the file you originally extracted, and click the **Change file** button. Replace it with your encoded file.
    1. Click **Save ROM** and save your new ROM. (Don't overwrite your original!)
 1. Open the new ROM file in an emulator and admire your work.
