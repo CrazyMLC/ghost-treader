@@ -28,13 +28,13 @@ def encode_1LMG(loadpath, savepath, compress=2):
 	with open(loadpath, 'r', encoding="utf-8") as text_file:
 		data = text_file.read()
 	# First we have to clean off the '====' lines, and separate the list.
-	data = data.split('=\n')[1:]
+	data = data.split('===\n')[1:]
 	if (len(data) % 2) != 0:
 		sys.stderr.write(f"Mismatching number of labels and messages: {loadpath}\n")
 		return -1
 	for i in range(len(data)):
 		line = data[i]
-		if line[-1] == "=":
+		if line[-3:] == "===":
 			data[i] = line[:line.rfind('\n')]
 	# Then we extract the data and put it into a message list.
 	messages = []
