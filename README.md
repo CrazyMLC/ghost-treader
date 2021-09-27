@@ -1,7 +1,7 @@
 # ghost-treader
 A specialized version of [ghost-tripper](https://github.com/CatTrinket/ghost-tripper) meant to deal with the text files of Capcom's DS release, *Ghost Trick: Phantom Detective*. 
 
-The project is limited to standard libraries for the sake of compatability, besides using PIL for images.
+The project is limited to standard libraries for the sake of portability, besides using PIL for images.
 
 ## Text files?
 There are hundreds of text files within the Ghost Trick ROM. Some of them are script files, but the majority are dialogue files.
