@@ -13,6 +13,7 @@ if __name__ == "__main__":
 	parser.add_argument("-o", "--output", help="Output file or folder", default=os.path.join(".","decoded",""))
 	parser.add_argument("-e", "--error", help="Error file")
 	parser.add_argument("-w", "--wildcard", help="Filters folder contents using fnmatch")
+	parser.add_argument("-c", "--compress", help="Controls compression. 1 is never, and 2 decompresses when needed", action='count', default=2)
 	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
 	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
 	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
@@ -21,7 +22,7 @@ if __name__ == "__main__":
 
 
 
-def decode_1LMG(loadpath,savepath=None):
+def decode_1LMG(loadpath, savepath=None, compress=2):
 	"""Open and decode a 1LMG file at the given filepath and print it, or save it if given a savepath."""
 	with open(loadpath, 'rb') as file:
 		data = file.read()
@@ -29,7 +30,15 @@ def decode_1LMG(loadpath,savepath=None):
 	# Time to check if it's a valid file, or decompress it if it's still compressed.
 	if data[:4] != b'1LMG':
 		if data[5:9] == b'1LMG':
-			data = lz11_decompress(data)
+			if compress > 1:
+				try:
+					data = lz11_decompress(data)
+				except:
+					sys.stderr.write(f"lz11 decompression failed: {loadpath}\n")
+					return -3
+			else:
+				sys.stderr.write(f"1LMG File is compressed: {loadpath}\n")
+				return -1
 		else:
 			sys.stderr.write(f"File isn't 1LMG format: {loadpath}\n")
 			return -1
@@ -105,7 +114,7 @@ def decode_1LMG(loadpath,savepath=None):
 		return 1 # Alternatively, this means the decode wasn't so successful. The decode is only partial, and meant for debugging/hacking purposes.
 
 
-#Now for the console interface.
+# Now for the console interface.
 if __name__ == "__main__":
 	args = parser.parse_args()
 	
@@ -128,33 +137,37 @@ if __name__ == "__main__":
 			time.sleep(wait)
 		quit()
 		
-	#Keep track of when the program started.
+	# Keep track of when the program started.
 	if not args.silent:
 		start = time.perf_counter()
 	
-	#First and foremost, let's see if we have any inputs so we can actually run.
+	# Try to initalize lz11, and disable compress if it failed.
+	if args.compress == 2 and not lz11_init("lib"):
+		args.compress = 1
+	
+	# First and foremost, let's see if we have any inputs so we can actually run.
 	if args.input == None:
 		if args.dragged == []:
 			end_program("ERROR: No inputs! Printing help text...", help=True)
 		args.input = args.dragged
-	#Let's keep track if there are multiple inputs, so we can throw an error if the output isn't a folder.
+	# Let's keep track if there are multiple inputs, so we can throw an error if the output isn't a folder.
 	multiple = len(args.input) > 1
 	if not multiple and os.path.isdir(args.input[0]):
 		multiple = True
 	
-	#Now to check the output.
+	# Now to check the output.
 	output_is_folder = False
 	if args.output[-1] == os.sep or os.path.isdir(args.output):
 		output_is_folder = True
-		if not os.path.exists(args.output):#If the output is a folder and doesn't exist, let's make it for the user.
+		if not os.path.exists(args.output):# If the output is a folder and doesn't exist, let's make it for the user.
 			try:
 				os.mkdir(args.output)
 			except:
 				end_program("ERROR: Couldn't create output folder.")
-	elif multiple:#If we have multiple inputs and the output isn't a folder, we should end execution.
+	elif multiple:# If we have multiple inputs and the output isn't a folder, we should end execution.
 		end_program('ERROR: Input was multiple files, but the output was a single file.')
 	
-	#Let's set up error reporting for errors that won't stop execution...
+	# Let's set up error reporting for errors that won't stop execution...
 	if args.error != None:
 		try:
 			stderr_temp = sys.stderr
@@ -163,24 +176,24 @@ if __name__ == "__main__":
 		except:
 			end_program(f"ERROR: Invalid error file.\n{args.error}")
 	
-	#Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders, which is why we have to do this.
+	# Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders, which is why we have to do this.
 	inputs = []
 	for path in args.input:
 		if not os.path.exists(path):
 			end_program(f"ERROR: Input doesn't exist.\n{path}")
 		if not os.path.isdir(path):
 			inputs.append(path)
-		else:#Time to sort through the folder...
+		else:# Time to sort through the folder...
 			for root, dirs, files in os.walk(path):
 				for name in files:
 					if args.wildcard != None:
 						if not fnmatch.fnmatch(os.path.basename(name), args.wildcard):
 							continue
 					inputs.append(os.path.join(root, name))
-	#Get rid of any duplicate filepaths in the list, just in case...
+	# Get rid of any duplicate filepaths in the list, just in case...
 	inputs = list(dict.fromkeys(inputs))
 	
-	#Good to go! Let's get through these files.
+	# Good to go! Let's get through these files.
 	decoded_files = 0
 	for i in range(len(inputs)):
 		if not args.silent:
@@ -197,7 +210,7 @@ if __name__ == "__main__":
 		#print(inputs[i], " decoded")
 
 
-	#Looks like we're done. Let's finish whatever outputs we have, and then exit.
+	# Looks like we're done. Let's finish whatever outputs we have, and then exit.
 	if not args.silent:
 		print_progress(1,1)
 	sys.stderr.flush()

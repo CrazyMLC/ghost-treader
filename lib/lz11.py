@@ -1,4 +1,4 @@
-import os
+import os,sys
 from ctypes import *
 from struct import unpack
 lz11 = None
@@ -9,9 +9,12 @@ def lz11_init(dirpath):
 		try:
 			lz11 = CDLL(os.path.join(dirpath,'lz11.so'),winmode=0)
 		except:
-			print("Failed to initialize lz11 library. Try rebuilding with the Makefile at .\\lib\\source\\")
-			print("Otherwise, maybe the folder structure has been modified.")
-			quit()
+			if os.path.exists(os.path.join(dirpath,'lz11.so')):
+				sys.stderr.write("Failed to initialize lz11.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
+			else:
+				sys.stderr.write("Couldn't find lz11.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
+			return False
+	return True
 
 def lz11_compress(input, flags=0b111):
 	in_len = len(input)
