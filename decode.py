@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from io import BytesIO
 from struct import unpack
+from pathlib import Path
 import sys,os,time,argparse,fnmatch
 
 from lib.tables import *
@@ -14,11 +15,10 @@ if __name__ == "__main__":
 	parser.add_argument("-e", "--error", help="Error file")
 	parser.add_argument("-w", "--wildcard", help="Filters folder contents using fnmatch")
 	parser.add_argument("-c", "--compress", help="Controls compression. 1 is never, and 2 decompresses when needed", action='count', default=2)
+	parser.add_argument("-f", "--folder", help="Disables keeping folder structure", action='store_false')
 	parser.add_argument("-s", "--silent", help="Skip prints", action='store_true')
 	parser.add_argument("-v", "--verbose", help="Wait for confirm", action='store_true')
 	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
-	
-	lz11_init("lib")
 
 
 
@@ -189,26 +189,36 @@ if __name__ == "__main__":
 					if args.wildcard != None:
 						if not fnmatch.fnmatch(os.path.basename(name), args.wildcard):
 							continue
-					inputs.append(os.path.join(root, name))
+					inputs.append(
+						(os.path.join(root,name),
+						os.path.relpath(os.path.join(root,name),path))
+						)
 	# Get rid of any duplicate filepaths in the list, just in case...
-	inputs = list(dict.fromkeys(inputs))
+	#inputs = list(dict.fromkeys(inputs))# Disabled for now
 	
 	# Good to go! Let's get through these files.
 	decoded_files = 0
 	for i in range(len(inputs)):
 		if not args.silent:
 			print_progress(1+i,len(inputs)+1)
-			
+		
 		if output_is_folder:
-			savepath = os.path.join(args.output,os.path.basename(inputs[i])+".txt")
+			if args.folder:
+				filename = inputs[i][1]
+			else:
+				filename = os.path.basename(inputs[i][1])
+			if filename[-4:] == ".txt":
+				filename = filename[:-4]
+			savepath = os.path.join(args.output, filename)
 		else:
 			savepath = args.output
 		
-		#print(inputs[i], " decoding...")
-		if decode_1LMG(inputs[i],savepath) >= 0:
+		# Pathlib is way better at this, so let's use it to create the folder structure.
+		if args.folder:
+			Path(savepath).parent.mkdir(parents=True, exist_ok=True)
+		
+		if decode_1LMG(inputs[i][0],savepath) >= 0:
 			decoded_files += 1
-		#print(inputs[i], " decoded")
-
 
 	# Looks like we're done. Let's finish whatever outputs we have, and then exit.
 	if not args.silent:
