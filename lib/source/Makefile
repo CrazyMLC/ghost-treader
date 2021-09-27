@@ -1,5 +1,5 @@
 ﻿CC="g++"
-CFLAGS="-shared -03"
+CXXFLAGS="-shared -03"
 OUT="lz11.so"
 SOURCES="lz11.cpp"
 
