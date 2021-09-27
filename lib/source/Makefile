@@ -1,6 +1,13 @@
-﻿all: lz11.so
-.PHONY: all
+﻿CC="g++"
+CXXFLAGS="-shared -03"
+OUT="lz11.so"
+SOURCES="lz11.cpp"
+
+all: lz11.so
 
 lz11.so: lz11.cpp lz11.h
-	g++ -shared -O3 -o lz11.so lz11.cpp
-	cp lz11.so ..
+	${CC} ${CXXFLAGS} -o ${OUT} ${SOURCES}
+	cp ${OUT} ..
+
+clean:
+	${RM} ${OUT}

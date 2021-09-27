@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from PIL import Image
 import os,sys
 """
@@ -35,7 +36,7 @@ db_palette = [# colors extracted from editing font_db.imb and observing the Peop
 	(170,73,0),#	c	1100
 	(195,97,0),#	d	1101
 	(211,105,0),#	e	1110
-	(255,130,0)#		f	1111
+	(255,130,0)#	f	1111
 ]
 """
 palette = [0xf7,0xb2,0x92,0,0xff,0xff,0x1,0xf7,0xd7,0xc2,0xb2,0x92,0x72,0x52,0x32,0]#made this up
