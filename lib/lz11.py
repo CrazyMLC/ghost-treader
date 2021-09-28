@@ -7,12 +7,12 @@ def lz11_init(dirpath):
 	global lz11
 	if lz11 == None:
 		try:
-			lz11 = CDLL(os.path.join(dirpath,'lz11.so'),winmode=0)
+			lz11 = CDLL(os.path.join(dirpath,'lz11bin.so'),winmode=0)
 		except:
-			if os.path.exists(os.path.join(dirpath,'lz11.so')):
-				sys.stderr.write("Failed to initialize lz11.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
+			if os.path.exists(os.path.join(dirpath,'lz11bin.so')):
+				sys.stderr.write("Failed to initialize lz11bin.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
 			else:
-				sys.stderr.write("Couldn't find lz11.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
+				sys.stderr.write("Couldn't find lz11bin.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
 			return False
 	return True
 

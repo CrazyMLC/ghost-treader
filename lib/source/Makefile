@@ -1,12 +1,12 @@
 ﻿CXX=g++
 CXXFLAGS=-shared -O3 -fPIC
-OUT=lz11.so
+OUT=lz11bin.so
 SOURCES=lz11.cpp
 
-all: lz11.so
+all: lz11bin.so
 .PHONY: all
 
-lz11.so: lz11.cpp lz11.h
+lz11bin.so: lz11.cpp lz11.h
 	${CXX} ${CXXFLAGS} -o ${OUT} ${SOURCES}
 	cp ${OUT} ..
 
