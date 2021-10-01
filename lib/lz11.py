@@ -3,19 +3,12 @@ from ctypes import *
 from struct import unpack
 lz11 = None
 
-def lz11_init(dirpath):
+def lz11_init(dirpath=os.path.join("lib","lz11encoder")):
 	global lz11
 	if lz11 == None:
-		p = os.path.join(dirpath,'lz11bin.so')
+		p = os.path.join(dirpath,"lz11bin.so")
 		if not os.path.exists(p):
-			if platform.system() == 'Windows':
-				s = os.path.join(dirpath,"source","lz11_win_x64.so")
-			elif platform.system() == 'Linux':
-				s = os.path.join(dirpath,"source","lz11_linux_x64.so")
-			else:
-				s = os.path.join(dirpath,"source","lz11bin.so")
-			if os.path.exists(s):
-				shutil.copy2(s,p)
+			p = os.path.join(dirpath,f"lz11_{platform.system()}_x64.so")
 				
 		try:
 			lz11 = CDLL(p,winmode=0)

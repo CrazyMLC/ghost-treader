@@ -141,7 +141,7 @@ if __name__ == "__main__":
 		start = time.perf_counter()
 	
 	# Try to initalize lz11, and disable compress if it failed.
-	if args.compress == 2 and not lz11_init("lib"):
+	if args.compress == 2 and not lz11_init():
 		args.compress = 1
 	
 	# First and foremost, let's see if we have any inputs so we can actually run.
