@@ -171,7 +171,7 @@ void LZ11NDSCompressor::CompressReverse(int max_scenarios) {
 
 	// Start at the END, and build the file backwards.
 	// This gives us the smartest backreference decisions.
-	ptrdiff_t total_saved = 0;
+	std::ptrdiff_t total_saved = 0;
 	size_t compressed_size = 0;
 	for (uint32_t src = (uint32_t)input_size_; src > 0; ) {
 		if (src == 0 || src > input_size_) {
@@ -346,7 +346,7 @@ void LZ11NDSCompressor::CompressForward(int max_scenarios) {
 	*pos++ = (input_size_ >> 8) & 0xFF;
 	*pos++ = (input_size_ >> 16) & 0xFF;
 
-	ptrdiff_t total_saved = 0;
+	std::ptrdiff_t total_saved = 0;
 	for (uint32_t src = 0; src < (uint32_t)input_size_; ) {
 		uint8_t *quadflags = pos++;
 		uint8_t nowflags = 0;
