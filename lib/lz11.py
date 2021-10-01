@@ -14,9 +14,9 @@ def lz11_init(dirpath=os.path.join("lib","lz11encoder")):
 			lz11 = CDLL(p,winmode=0)
 		except:
 			if os.path.exists(p):
-				sys.stderr.write("Failed to initialize lz11bin.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
+				sys.stderr.write("Failed to initialize lz11bin.so binary. Try rebuilding with the Makefile at .\\lib\\lz11encoder\\")
 			else:
-				sys.stderr.write("Couldn't find lz11bin.so binary. Try rebuilding with the Makefile at .\\lib\\source\\")
+				sys.stderr.write("Couldn't find lz11bin.so binary. Try rebuilding with the Makefile at .\\lib\\lz11encoder\\")
 			return False
 	return True
 
