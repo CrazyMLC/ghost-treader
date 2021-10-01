@@ -1,3 +1,5 @@
 *.pyc
 *.lz
-lib/source/lz11.so
+*.so
+!lz11_linux_x64.so
+!lz11_win_x64.so
