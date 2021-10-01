@@ -28,7 +28,7 @@ For now, **ghost-treader** only works with dialogue files. But that could change
 3. Decode the scripting language.
 4. Expand back into handling images.
 
-## How to use (Windows)
+## How to use
 1. First, you're going to need some resources.
    1. You'll need Python 3, as well as this repo cloned onto your device.
    1. You'll be needing [tinke](https://github.com/pleonex/tinke)'s binary, or one of its many forks.
