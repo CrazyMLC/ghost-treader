@@ -175,7 +175,7 @@ if __name__ == "__main__":
 		except:
 			end_program(f"ERROR: Invalid error file.\n{args.error}")
 	
-	# Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders, which is why we have to do this.
+	# Alright, let's filter through these inputs to get a list of filenames. Some of them may be folders.
 	inputs = []
 	for path in args.input:
 		if not os.path.exists(path):
