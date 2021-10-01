@@ -181,7 +181,7 @@ if __name__ == "__main__":
 		if not os.path.exists(path):
 			end_program(f"ERROR: Input doesn't exist.\n{path}")
 		if not os.path.isdir(path):
-			inputs.append(path)
+			inputs.append((path,os.path.basename(path)))
 		else:# Time to sort through the folder...
 			for root, dirs, files in os.walk(path):
 				for name in files:
