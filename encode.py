@@ -32,10 +32,8 @@ def encode_1LMG(loadpath, savepath, compress=2):
 	if (len(data) % 2) != 0:
 		sys.stderr.write(f"Mismatching number of labels and messages: {loadpath}\n")
 		return -1
-	for i in range(len(data)):
-		line = data[i]
-		if line[-3:] == "===":
-			data[i] = line[:line.rfind('\n')]
+	for i in range(len(data)-1):
+		data[i] = data[i][:data[i].rfind('\n')]
 	# Then we extract the data and put it into a message list.
 	messages = []
 	for i in range(0,len(data),2):
@@ -50,10 +48,6 @@ def encode_1LMG(loadpath, savepath, compress=2):
 		messages.append(m)
 
 	# Alright, we have all the input information. Time to start building the file.
-	header = BytesIO(b'1LMG')
-	header.seek(0,2)
-	header.write(bytes(4))# Write the "mystery" bytes as blank, for now.
-	
 	data = BytesIO()
 	
 	strings = BytesIO(b'*'+bytes(3))# Placeholder command. Don't actually know how this section works yet; it's used for scripts.
@@ -63,6 +57,7 @@ def encode_1LMG(loadpath, savepath, compress=2):
 	
 	labels = BytesIO()
 	labels.write(b'*'+bytes(1))
+	
 	# We're gonna loop through each message, and populate each section of the file as we go.
 	for message in messages:
 		table.write( pack('<LL', labels.seek(0,2), data.seek(0,2) + 0x34) )
@@ -80,10 +75,16 @@ def encode_1LMG(loadpath, savepath, compress=2):
 	temp = labels.seek(0,2) % 4
 	if temp != 0:
 		labels.write(bytes(4-temp))
+		
 	# Now we fill in the header...
+	header = BytesIO(b'1LMG')
+	header.seek(0,2)
+	header.write(bytes(4))# Write the "mystery" bytes as blank, for now.
 	header.write( pack('<LLL', data.seek(0,2), strings.seek(0,2), table.seek(0,2)+labels.seek(0,2)) )
 	header.write(bytes(0x20))
+	
 	# Well, that was easy. Time to save the file.
+	# Going to merge everything into the header so we can easily feed it into the compression function later.
 	for part in [data,strings,table,labels]:
 		part.seek(0)
 		header.write(part.read())
@@ -187,15 +188,15 @@ if __name__ == "__main__":
 	
 	# Good to go! Let's get through these files.
 	encoded_files = 0
-	for i in range(len(inputs)):
+	for i,input in enumerate(inputs):
 		if not args.silent:
 			print_progress(1+i,len(inputs)+1)
 			
 		if output_is_folder:
 			if args.folder:
-				filename = inputs[i][1]
+				filename = input[1]
 			else:
-				filename = os.path.basename(inputs[i][1])
+				filename = os.path.basename(input[1])
 			if filename[-4:] == ".txt":
 				filename = filename[:-4]
 			savepath = os.path.join(args.output, filename)
@@ -206,7 +207,7 @@ if __name__ == "__main__":
 		if args.folder:
 			Path(savepath).parent.mkdir(parents=True, exist_ok=True)
 		
-		if encode_1LMG(inputs[i][0], savepath, args.compress) >= 0:
+		if encode_1LMG(input[0], savepath, args.compress) >= 0:
 			encoded_files += 1
 
 	# Looks like we're done. Let's finish whatever outputs we have, and then exit.

@@ -75,7 +75,6 @@ def decode_1LMG(loadpath, savepath=None, compress=2):
 		Message( *unpack('<LL', data.read(8)) )
 	)
 	if message_count > 1:
-		# Then loop over the rest...
 		for m in range(1,message_count):
 			messages.append(
 				Message( *unpack('<LL', data.read(8)) )
@@ -198,17 +197,15 @@ if __name__ == "__main__":
 	
 	# Good to go! Let's get through these files.
 	decoded_files = 0
-	for i in range(len(inputs)):
+	for i,input in enumerate(inputs):
 		if not args.silent:
 			print_progress(1+i,len(inputs)+1)
-		
+			
 		if output_is_folder:
 			if args.folder:
-				filename = inputs[i][1]
+				filename = input[1]
 			else:
-				filename = os.path.basename(inputs[i][1])
-			if filename[-4:] == ".txt":
-				filename = filename[:-4]
+				filename = os.path.basename(input[1])
 			savepath = os.path.join(args.output, filename)
 		else:
 			savepath = args.output
@@ -217,7 +214,7 @@ if __name__ == "__main__":
 		if args.folder:
 			Path(savepath).parent.mkdir(parents=True, exist_ok=True)
 		
-		if decode_1LMG(inputs[i][0],savepath) >= 0:
+		if decode_1LMG(input[0],savepath+".txt") >= 0:
 			decoded_files += 1
 
 	# Looks like we're done. Let's finish whatever outputs we have, and then exit.

@@ -39,12 +39,7 @@ class Message:
 	
 	def __str__(self):
 		namestr = self.label + " Position: " + hex(self.pointer)
-		result = "\n"
-		result += '=' * len(namestr) + "\n"
-		result += namestr + "\n"
-		result += '=' * len(namestr) + "\n"
-		result += self.decoded + "\n"
-		return result
+		return "\n".join(['=' * len(namestr), namestr, '=' * len(namestr), self.decoded,''])
 	
 	def get_label(self, data, position):
 		data.seek(position+self.label_offset)
