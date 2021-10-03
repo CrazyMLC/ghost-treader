@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os,sys,platform,shutil,argparse
 from ctypes import *
 from struct import unpack
@@ -60,10 +61,6 @@ if __name__ == "__main__":
 		print("==============\nInvalid decode/encode flags.\n==============\n")
 		parser.print_help()
 		input("Press any key to exit.")
-		quit()
-	
-	if not os.access(args.output, os.W_OK):
-		input("==============\nDon't have permission to write to output file.\n==============\nPress any key to exit.")
 		quit()
 	
 	if not lz11_init("lz11encoder"):
