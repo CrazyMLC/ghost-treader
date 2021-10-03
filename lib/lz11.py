@@ -39,12 +39,11 @@ def lz11_decompress(input):
 
 
 if __name__ == "__main__":	
-	parser = argparse.ArgumentParser(description = "Decodes 1LMG files into plaintext.")
+	parser = argparse.ArgumentParser(description = "Encrypts or decrypts files using lz11 compression.")
 	parser.add_argument("-i", "--input", help="Input file")
 	parser.add_argument("-o", "--output", help="Output file")
 	parser.add_argument("-d", "--decode", help="Decode input", action='store_true')
 	parser.add_argument("-e", "--encode", help="Encode input", action='store_true')
-	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
 	
 	if len(sys.argv) <= 1:
 		parser.print_help()
