@@ -1,4 +1,4 @@
-import os,sys,platform,shutil
+import os,sys,platform,shutil,argparse
 from ctypes import *
 from struct import unpack
 lz11 = None
@@ -32,3 +32,65 @@ def lz11_decompress(input):
 	output = c_buffer(out_len)
 	lz11.decompress_nds_lz11(byref(c_buffer(input)),in_len,byref(output))
 	return output
+
+
+
+
+
+if __name__ == "__main__":	
+	parser = argparse.ArgumentParser(description = "Decodes 1LMG files into plaintext.")
+	parser.add_argument("-i", "--input", help="Input file")
+	parser.add_argument("-o", "--output", help="Output file")
+	parser.add_argument("-d", "--decode", help="Decode input", action='store_true')
+	parser.add_argument("-e", "--encode", help="Encode input", action='store_true')
+	parser.add_argument("dragged", help="Catches dragged and dropped files", nargs='*')
+	
+	if len(sys.argv) <= 1:
+		parser.print_help()
+		input("Press any key to exit.")
+		quit()
+	
+	args = parser.parse_args()
+	
+	if not os.path.exists(args.input):
+		input("==============\nInput file doesn't exist.\n==============\nPress any key to exit.")
+		quit()
+	
+	if args.decode == args.encode:
+		print("==============\nInvalid decode/encode flags.\n==============\n")
+		parser.print_help()
+		input("Press any key to exit.")
+		quit()
+	
+	if not os.access(args.output, os.W_OK):
+		input("==============\nDon't have permission to write to output file.\n==============\nPress any key to exit.")
+		quit()
+	
+	if not lz11_init("lz11encoder"):
+		input("==============\nlz11 initialization failed.\n==============\nPress any key to exit.")
+		quit()
+	
+	try:
+		with open(args.input,'rb') as file:
+			data = file.read()
+	except:
+		input("==============\nFailed to read from input file.\n==============\nPress any key to exit.")
+		quit()
+	
+	try:
+		if args.decode:
+			data = lz11_decompress(data)
+		else:
+			data = lz11_compress(data)
+	except:
+		input("==============\nEncoding failed.\n==============\nPress any key to exit.")
+		quit()
+	
+	try:
+		with open(args.output,'wb') as file:
+			file.write(data)
+	except:
+		input("==============\nFailed to write to output file.\n==============\nPress any key to exit.")
+		quit()
+	
+	input("Operation successful.\nPress any key to exit.")
