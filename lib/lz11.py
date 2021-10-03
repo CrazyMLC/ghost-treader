@@ -39,54 +39,63 @@ def lz11_decompress(input):
 
 
 if __name__ == "__main__":	
-	parser = argparse.ArgumentParser(description = "Encrypts or decrypts files using lz11 compression.")
-	parser.add_argument("-i", "--input", help="Input file")
-	parser.add_argument("-o", "--output", help="Output file")
+	parser = argparse.ArgumentParser(description = "Encrypts or decrypts files using lz11 compression.\n\nIntended for use as an import; the main function is provided for testing.\nEncodes or decodes one file at a time. Pass -e or -d to indicate which action to take.")
+	parser.add_argument("-i", "--input", help="Input file", required=True)
 	parser.add_argument("-d", "--decode", help="Decode input", action='store_true')
 	parser.add_argument("-e", "--encode", help="Encode input", action='store_true')
+	parser.add_argument("-o", "--output", help="Output file", required=True)
+	parser.add_argument("-s", "--silent", help="Skip non-error prints", action='store_true')
 	
-	if len(sys.argv) <= 1:
+	if len(sys.argv) < 2:
 		parser.print_help()
 		input("Press any key to exit.")
 		quit()
 	
 	args = parser.parse_args()
-	
+		
 	if not os.path.exists(args.input):
-		input("==============\nInput file doesn't exist.\n==============\nPress any key to exit.")
+		print("Error: Input file doesn't exist.")
 		quit()
 	
 	if args.decode == args.encode:
-		print("==============\nInvalid decode/encode flags.\n==============\n")
-		parser.print_help()
-		input("Press any key to exit.")
+		print("Error: Invalid decode/encode flags. Run with no arguments or with -h to view help.")
 		quit()
 	
 	if not lz11_init("lz11encoder"):
-		input("==============\nlz11 initialization failed.\n==============\nPress any key to exit.")
+		print("Error: lz11 initialization failed.")
 		quit()
 	
 	try:
 		with open(args.input,'rb') as file:
 			data = file.read()
 	except:
-		input("==============\nFailed to read from input file.\n==============\nPress any key to exit.")
+		print("Error: Failed to read from input file.")
 		quit()
 	
-	try:
-		if args.decode:
+	
+	if args.decode:
+		if not args.silent:
+			print("Decompressing input...")
+		try:
 			data = lz11_decompress(data)
-		else:
+		except:
+			print("Error: Decompression failed.")
+			quit()	
+	else:
+		if not args.silent:
+			print("Compressing input...")
+		try:
 			data = lz11_compress(data)
-	except:
-		input("==============\nEncoding failed.\n==============\nPress any key to exit.")
-		quit()
+		except:
+			print("Error: Compression failed.")
+			quit()
 	
 	try:
 		with open(args.output,'wb') as file:
 			file.write(data)
 	except:
-		input("==============\nFailed to write to output file.\n==============\nPress any key to exit.")
+		print("Error: Failed to write to output file.")
 		quit()
 	
-	input("Operation successful.\nPress any key to exit.")
+	if not args.silent:
+		print("Operation successful.")
